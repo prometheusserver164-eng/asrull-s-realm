@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { motion } from "framer-motion";
-import { Plus, Pencil, Trash2, Loader2, GraduationCap, Briefcase } from "lucide-react";
+import { Plus, Pencil, Trash2, Loader2, GraduationCap, Briefcase, MapPin } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
@@ -412,7 +412,10 @@ function TimelineCard({
         </div>
         <p className="text-primary text-sm font-medium">{item.organization}</p>
         {item.location && (
-          <p className="text-foreground-muted text-sm">📍 {item.location}</p>
+          <p className="text-foreground-muted text-sm flex items-center gap-1">
+            <MapPin className="w-3 h-3" />
+            {item.location}
+          </p>
         )}
         <p className="text-foreground-muted text-xs mt-1">
           {format(new Date(item.start_date), "MMM yyyy")} -{" "}
