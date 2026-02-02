@@ -1,7 +1,7 @@
 import { motion } from "framer-motion";
 import { useInView } from "framer-motion";
 import { useRef, useState } from "react";
-import { Instagram, Mail, Copy, Check, Send } from "lucide-react";
+import { Instagram, Mail, Copy, Check, Send, Github, Linkedin, Twitter, Youtube, Globe } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
@@ -12,6 +12,12 @@ import { toast } from "sonner";
 const socialIcons: Record<string, React.ElementType> = {
   instagram: Instagram,
   email: Mail,
+  github: Github,
+  linkedin: Linkedin,
+  twitter: Twitter,
+  youtube: Youtube,
+  discord: Globe,
+  website: Globe,
 };
 
 export function Contact() {

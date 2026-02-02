@@ -4,6 +4,7 @@ import { Menu, X } from "lucide-react";
 import { useProfile } from "@/hooks/useProfile";
 import { Link, useLocation } from "react-router-dom";
 import { Button } from "@/components/ui/button";
+import { ThemeToggle } from "@/components/ThemeToggle";
 
 const navLinks = [
   { href: "#about", label: "About" },
@@ -75,6 +76,7 @@ export function Navigation() {
                   {link.label}
                 </button>
               ))}
+              <ThemeToggle />
               <Link to="/admin">
                 <Button variant="outline" size="sm">
                   Admin
@@ -129,7 +131,9 @@ export function Navigation() {
                 initial={{ y: 20, opacity: 0 }}
                 animate={{ y: 0, opacity: 1 }}
                 transition={{ delay: 0.3 }}
+                className="flex flex-col items-center gap-4"
               >
+                <ThemeToggle />
                 <Link to="/admin" onClick={() => setIsMobileMenuOpen(false)}>
                   <Button variant="outline" size="lg">
                     Admin Panel

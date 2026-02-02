@@ -9,6 +9,7 @@ import { Switch } from "@/components/ui/switch";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+import { TechIconPicker } from "@/components/TechIconPicker";
 
 interface TechCategory {
   id: string;
@@ -34,6 +35,43 @@ const emptyItem: Partial<TechItem> = {
   is_featured: false,
   sort_order: 0,
 };
+
+// Mini icon preview for list
+function TechIconPreview({ name }: { name: string }) {
+  const icons: Record<string, React.ReactNode> = {
+    java: <div className="w-8 h-8 rounded bg-[#5382a1] flex items-center justify-center text-white text-xs font-bold">J</div>,
+    javascript: <div className="w-8 h-8 rounded bg-[#f7df1e] flex items-center justify-center text-black text-xs font-bold">JS</div>,
+    typescript: <div className="w-8 h-8 rounded bg-[#3178c6] flex items-center justify-center text-white text-xs font-bold">TS</div>,
+    php: <div className="w-8 h-8 rounded bg-[#777bb4] flex items-center justify-center text-white text-xs font-bold">P</div>,
+    python: <div className="w-8 h-8 rounded bg-gradient-to-br from-[#306998] to-[#ffd43b] flex items-center justify-center text-white text-xs font-bold">Py</div>,
+    dart: <div className="w-8 h-8 rounded bg-[#0175c2] flex items-center justify-center text-white text-xs font-bold">D</div>,
+    react: <div className="w-8 h-8 rounded bg-[#20232a] flex items-center justify-center text-[#61dafb] text-xs font-bold">R</div>,
+    laravel: <div className="w-8 h-8 rounded bg-[#ff2d20] flex items-center justify-center text-white text-xs font-bold">L</div>,
+    codeigniter: <div className="w-8 h-8 rounded bg-[#ee4323] flex items-center justify-center text-white text-xs font-bold">CI</div>,
+    nodejs: <div className="w-8 h-8 rounded bg-[#339933] flex items-center justify-center text-white text-xs font-bold">N</div>,
+    flutter: <div className="w-8 h-8 rounded bg-[#02569b] flex items-center justify-center text-[#54c5f8] text-xs font-bold">F</div>,
+    mysql: <div className="w-8 h-8 rounded bg-[#00618a] flex items-center justify-center text-white text-xs font-bold">M</div>,
+    mongodb: <div className="w-8 h-8 rounded bg-[#47a248] flex items-center justify-center text-white text-xs font-bold">Mo</div>,
+    aws: <div className="w-8 h-8 rounded bg-[#232f3e] flex items-center justify-center text-[#ff9900] text-xs font-bold">A</div>,
+    digitalocean: <div className="w-8 h-8 rounded bg-[#0080ff] flex items-center justify-center text-white text-xs font-bold">DO</div>,
+    azure: <div className="w-8 h-8 rounded bg-[#0089d6] flex items-center justify-center text-white text-xs font-bold">Az</div>,
+    git: <div className="w-8 h-8 rounded bg-[#f05032] flex items-center justify-center text-white text-xs font-bold">G</div>,
+    figma: <div className="w-8 h-8 rounded bg-gradient-to-b from-[#f24e1e] via-[#a259ff] to-[#1abcfe] flex items-center justify-center text-white text-xs font-bold">F</div>,
+    html: <div className="w-8 h-8 rounded bg-[#e34f26] flex items-center justify-center text-white text-xs font-bold">H</div>,
+    css: <div className="w-8 h-8 rounded bg-[#1572b6] flex items-center justify-center text-white text-xs font-bold">C</div>,
+    vue: <div className="w-8 h-8 rounded bg-[#42b883] flex items-center justify-center text-white text-xs font-bold">V</div>,
+    angular: <div className="w-8 h-8 rounded bg-[#dd0031] flex items-center justify-center text-white text-xs font-bold">A</div>,
+    nextjs: <div className="w-8 h-8 rounded bg-black flex items-center justify-center text-white text-xs font-bold">N</div>,
+    tailwind: <div className="w-8 h-8 rounded bg-[#06b6d4] flex items-center justify-center text-white text-xs font-bold">T</div>,
+    docker: <div className="w-8 h-8 rounded bg-[#2496ed] flex items-center justify-center text-white text-xs font-bold">D</div>,
+    kubernetes: <div className="w-8 h-8 rounded bg-[#326ce5] flex items-center justify-center text-white text-xs font-bold">K</div>,
+    redis: <div className="w-8 h-8 rounded bg-[#dc382d] flex items-center justify-center text-white text-xs font-bold">R</div>,
+    postgresql: <div className="w-8 h-8 rounded bg-[#336791] flex items-center justify-center text-white text-xs font-bold">PG</div>,
+    firebase: <div className="w-8 h-8 rounded bg-[#ffca28] flex items-center justify-center text-black text-xs font-bold">F</div>,
+    supabase: <div className="w-8 h-8 rounded bg-[#3ecf8e] flex items-center justify-center text-white text-xs font-bold">S</div>,
+  };
+  return icons[name?.toLowerCase()] || <div className="w-8 h-8 rounded bg-muted flex items-center justify-center text-foreground-muted text-xs">?</div>;
+}
 
 export default function TechStackAdmin() {
   const queryClient = useQueryClient();
@@ -195,17 +233,7 @@ export default function TechStackAdmin() {
                 className="card-elevated p-4 flex items-center justify-between"
               >
                 <div className="flex items-center gap-3">
-                  <span className="text-2xl">
-                    {item.icon_name === "java"
-                      ? "☕"
-                      : item.icon_name === "javascript"
-                      ? "🟨"
-                      : item.icon_name === "typescript"
-                      ? "💙"
-                      : item.icon_name === "react"
-                      ? "⚛️"
-                      : "🔧"}
-                  </span>
+                  <TechIconPreview name={item.icon_name || ""} />
                   <div>
                     <p className="font-medium text-foreground">{item.name}</p>
                     <div className="flex items-center gap-2">
@@ -252,7 +280,7 @@ export default function TechStackAdmin() {
 
       {/* Dialog */}
       <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
-        <DialogContent className="bg-card border-border">
+        <DialogContent className="bg-card border-border max-w-lg">
           <DialogHeader>
             <DialogTitle className="font-display text-xl">
               {editingItem?.id ? "Edit Tech" : "Add Tech"}
@@ -300,15 +328,13 @@ export default function TechStackAdmin() {
 
             <div>
               <label className="block text-sm font-medium text-foreground mb-2">
-                Icon Name
+                Icon
               </label>
-              <Input
+              <TechIconPicker
                 value={editingItem?.icon_name || ""}
-                onChange={(e) =>
-                  setEditingItem((prev) => ({ ...prev, icon_name: e.target.value }))
+                onChange={(value) =>
+                  setEditingItem((prev) => ({ ...prev, icon_name: value }))
                 }
-                placeholder="react, javascript, etc."
-                className="bg-background border-border"
               />
             </div>
 

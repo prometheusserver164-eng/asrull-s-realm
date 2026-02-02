@@ -1,7 +1,7 @@
 import { motion } from "framer-motion";
 import { useInView } from "framer-motion";
 import { useRef } from "react";
-import { GraduationCap, Briefcase } from "lucide-react";
+import { GraduationCap, Briefcase, MapPin } from "lucide-react";
 import { useTimeline } from "@/hooks/useProfile";
 import { format } from "date-fns";
 
@@ -127,8 +127,9 @@ export function Timeline() {
 
                         {/* Location */}
                         {item.location && (
-                          <p className="text-foreground-muted text-sm mb-3">
-                            📍 {item.location}
+                          <p className="text-foreground-muted text-sm mb-3 flex items-center gap-1">
+                            <MapPin className="w-3 h-3" />
+                            {item.location}
                           </p>
                         )}
 
