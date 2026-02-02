@@ -1,7 +1,7 @@
 import { motion } from "framer-motion";
 import { useInView } from "framer-motion";
 import { useRef } from "react";
-import { User, Code, Heart, Sparkles } from "lucide-react";
+import { User, Code, Zap, Sparkles } from "lucide-react";
 import { useProfile } from "@/hooks/useProfile";
 
 const aboutCards = [
@@ -16,8 +16,8 @@ const aboutCards = [
     description: "Full-stack web applications, game server backends, and scalable systems using modern technologies.",
   },
   {
-    icon: Heart,
-    title: "What I Love",
+    icon: Zap,
+    title: "What Drives Me",
     description: "Clean code, elegant solutions, learning new technologies, and creating seamless user experiences.",
   },
 ];
