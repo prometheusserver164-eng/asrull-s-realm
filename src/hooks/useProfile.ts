@@ -68,6 +68,7 @@ export interface TechItem {
   category_id: string | null;
   icon_name: string | null;
   custom_icon_url: string | null;
+  icon_scale: number;
   proficiency: number;
   is_featured: boolean;
   sort_order: number;

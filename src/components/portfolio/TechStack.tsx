@@ -134,16 +134,23 @@ export function TechStack() {
                 {/* Content */}
                 <div className="relative z-10 flex flex-col items-center text-center space-y-3">
                   {/* Tech Logo */}
-                  <div className="w-12 h-12 flex items-center justify-center rounded-xl bg-background/50 border border-border/50 group-hover:border-primary/30 transition-colors duration-300 overflow-hidden">
+                  <div className="w-14 h-14 flex items-center justify-center rounded-xl bg-background/50 border border-border/50 group-hover:border-primary/30 transition-colors duration-300 overflow-hidden">
                     {item.custom_icon_url ? (
                       <img
                         src={item.custom_icon_url}
                         alt={item.name}
-                        className="w-8 h-8 object-contain"
+                        style={{
+                          width: `${(item.icon_scale || 100) * 0.36}px`,
+                          height: `${(item.icon_scale || 100) * 0.36}px`,
+                        }}
+                        className="object-contain"
                         loading="lazy"
                       />
                     ) : (
-                      <span className="text-xl font-bold gradient-text-accent">
+                      <span 
+                        className="font-bold gradient-text-accent"
+                        style={{ fontSize: `${(item.icon_scale || 100) * 0.22}px` }}
+                      >
                         {item.name.charAt(0)}
                       </span>
                     )}
