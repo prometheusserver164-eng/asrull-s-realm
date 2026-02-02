@@ -1,17 +1,19 @@
 import { motion } from "framer-motion";
 import { useLanguage, Language } from "@/contexts/LanguageContext";
 import { cn } from "@/lib/utils";
+import { Globe } from "lucide-react";
 
-const languages: { code: Language; label: string; flag: string }[] = [
-  { code: "id", label: "ID", flag: "🇮🇩" },
-  { code: "en", label: "EN", flag: "🇬🇧" },
+const languages: { code: Language; label: string }[] = [
+  { code: "id", label: "ID" },
+  { code: "en", label: "EN" },
 ];
 
 export function LanguageSwitcher({ className }: { className?: string }) {
   const { language, setLanguage } = useLanguage();
 
   return (
-    <div className={cn("flex items-center gap-1 p-1 rounded-full bg-card/50 border border-border/50", className)}>
+    <div className={cn("flex items-center gap-0.5 p-1 rounded-full bg-card/80 border border-border/50 backdrop-blur-sm", className)}>
+      <Globe className="w-3.5 h-3.5 text-foreground-muted mx-1.5" />
       {languages.map((lang) => (
         <motion.button
           key={lang.code}
@@ -19,7 +21,7 @@ export function LanguageSwitcher({ className }: { className?: string }) {
           whileHover={{ scale: 1.05 }}
           whileTap={{ scale: 0.95 }}
           className={cn(
-            "relative px-2 py-1 rounded-full text-xs font-medium transition-all duration-200 flex items-center gap-1",
+            "relative px-2.5 py-1 rounded-full text-xs font-medium transition-all duration-200",
             language === lang.code
               ? "text-primary-foreground"
               : "text-foreground-muted hover:text-foreground"
@@ -32,8 +34,7 @@ export function LanguageSwitcher({ className }: { className?: string }) {
               transition={{ type: "spring", stiffness: 400, damping: 30 }}
             />
           )}
-          <span className="relative z-10">{lang.flag}</span>
-          <span className="relative z-10">{lang.label}</span>
+          <span className="relative z-10 font-semibold">{lang.label}</span>
         </motion.button>
       ))}
     </div>

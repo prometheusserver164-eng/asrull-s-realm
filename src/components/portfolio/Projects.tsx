@@ -7,6 +7,7 @@ import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog";
 import { cn } from "@/lib/utils";
 import { Skeleton } from "@/components/ui/skeleton";
+import { useLanguage } from "@/contexts/LanguageContext";
 
 const containerVariants = {
   hidden: { opacity: 0 },
@@ -34,6 +35,7 @@ const cardVariants = {
 };
 
 function ProjectCard({ project, index, isInView }: { project: Project; index: number; isInView: boolean }) {
+  const { t } = useLanguage();
   const [isOpen, setIsOpen] = useState(false);
   const [isHovered, setIsHovered] = useState(false);
 
@@ -83,7 +85,7 @@ function ProjectCard({ project, index, isInView }: { project: Project; index: nu
                 className="flex items-center gap-1 px-3 py-1.5 rounded-full bg-primary text-primary-foreground text-sm font-medium hover:bg-primary/90 transition-colors"
               >
                 <ExternalLink className="w-3 h-3" />
-                Live
+                {t("projects.live")}
               </a>
             )}
             {project.github_url && (
@@ -95,7 +97,7 @@ function ProjectCard({ project, index, isInView }: { project: Project; index: nu
                 className="flex items-center gap-1 px-3 py-1.5 rounded-full bg-card border border-border text-foreground text-sm font-medium hover:border-primary/50 transition-colors"
               >
                 <Github className="w-3 h-3" />
-                Code
+                {t("projects.code")}
               </a>
             )}
           </motion.div>
@@ -118,11 +120,11 @@ function ProjectCard({ project, index, isInView }: { project: Project; index: nu
               initial={{ x: -20, opacity: 0 }}
               animate={{ x: 0, opacity: 1 }}
               transition={{ delay: 0.2 }}
-              className="absolute top-4 left-4 px-3 py-1 rounded-full bg-primary/90 text-primary-foreground text-xs font-medium flex items-center gap-1"
-            >
-              <Sparkles className="w-3 h-3" />
-              Featured
-            </motion.div>
+            className="absolute top-4 left-4 px-3 py-1 rounded-full bg-primary/90 text-primary-foreground text-xs font-medium flex items-center gap-1"
+          >
+            <Sparkles className="w-3 h-3" />
+            {t("projects.featured")}
+          </motion.div>
           )}
         </div>
 
@@ -229,13 +231,12 @@ function ProjectCard({ project, index, isInView }: { project: Project; index: nu
                   ))}
                 </div>
 
-                {/* Links */}
                 <div className="flex gap-4">
                   {project.live_url && (
                     <Button asChild variant="hero" size="lg">
                       <a href={project.live_url} target="_blank" rel="noopener noreferrer">
                         <ExternalLink className="w-4 h-4" />
-                        View Live
+                        {t("projects.view_live")}
                       </a>
                     </Button>
                   )}
@@ -243,7 +244,7 @@ function ProjectCard({ project, index, isInView }: { project: Project; index: nu
                     <Button asChild variant="hero-outline" size="lg">
                       <a href={project.github_url} target="_blank" rel="noopener noreferrer">
                         <Github className="w-4 h-4" />
-                        View Code
+                        {t("projects.view_code")}
                       </a>
                     </Button>
                   )}
@@ -261,12 +262,13 @@ function ProjectCard({ project, index, isInView }: { project: Project; index: nu
 function WebsitePreview({ 
   url, 
   fallbackImage,
-  title 
+  title
 }: { 
   url: string; 
   fallbackImage?: string | null;
   title: string;
 }) {
+  const { t } = useLanguage();
   const [isLoading, setIsLoading] = useState(true);
   const [hasError, setHasError] = useState(false);
   const [showIframe, setShowIframe] = useState(true);
@@ -301,8 +303,8 @@ function WebsitePreview({
           <Globe className="w-8 h-8 text-primary/50" />
         </div>
         <div className="text-center px-4">
-          <p className="text-sm font-medium text-foreground mb-1">Website Preview</p>
-          <p className="text-xs text-foreground-muted">Click "Live" to visit the site</p>
+          <p className="text-sm font-medium text-foreground mb-1">{t("projects.website_preview")}</p>
+          <p className="text-xs text-foreground-muted">{t("projects.click_live")}</p>
         </div>
       </div>
     );
@@ -317,7 +319,7 @@ function WebsitePreview({
             <div className="relative">
               <Globe className="w-8 h-8 text-primary animate-pulse" />
             </div>
-            <span className="text-sm text-foreground-muted">Loading preview...</span>
+            <span className="text-sm text-foreground-muted">{t("projects.loading")}</span>
           </div>
         </div>
       )}
@@ -344,7 +346,7 @@ function WebsitePreview({
       {/* Live indicator */}
       <div className="absolute top-2 left-2 flex items-center gap-1.5 px-2 py-1 rounded-full bg-background/80 backdrop-blur-sm border border-border/50">
         <span className="w-2 h-2 rounded-full bg-green-500 animate-pulse" />
-        <span className="text-xs font-medium text-foreground">Live</span>
+        <span className="text-xs font-medium text-foreground">{t("projects.live_indicator")}</span>
       </div>
 
       {/* Fallback button if iframe doesn't work well */}
@@ -353,7 +355,7 @@ function WebsitePreview({
         className="absolute bottom-2 right-2 flex items-center gap-1 px-2 py-1 rounded-full bg-background/80 backdrop-blur-sm border border-border/50 text-xs text-foreground-muted hover:text-foreground transition-colors"
       >
         <ImageIcon className="w-3 h-3" />
-        Show image
+        {t("projects.show_image")}
       </button>
     </div>
   );
@@ -367,6 +369,7 @@ function ProjectMediaCarousel({
   project: Project;
   isHovered: boolean;
 }) {
+  const { t } = useLanguage();
   const [currentSlide, setCurrentSlide] = useState(0);
   const hasLiveUrl = !!project.live_url;
   const hasImage = !!project.image_url;
@@ -399,7 +402,7 @@ function ProjectMediaCarousel({
           <div className="w-16 h-16 rounded-2xl bg-primary/10 border border-primary/20 flex items-center justify-center">
             <Globe className="w-8 h-8 text-primary/50" />
           </div>
-          <span className="text-sm text-foreground-muted">No preview</span>
+          <span className="text-sm text-foreground-muted">{t("projects.no_preview")}</span>
         </motion.div>
       </div>
     );
@@ -531,6 +534,7 @@ export function Projects() {
   const ref = useRef(null);
   const isInView = useInView(ref, { once: true, margin: "-100px" });
   const { data: projects } = useProjects();
+  const { t } = useLanguage();
 
   // Placeholder projects if none exist
   const displayProjects = projects?.length ? projects : [
@@ -607,8 +611,8 @@ export function Projects() {
               className="inline-flex items-center gap-2 mb-3 sm:mb-4"
             >
               <Sparkles className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-primary" />
-              <span className="text-primary text-xs sm:text-sm font-medium uppercase tracking-widest">
-                My Work
+            <span className="text-primary text-xs sm:text-sm font-medium uppercase tracking-widest">
+                {t("projects.label")}
               </span>
               <Sparkles className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-primary" />
             </motion.div>
@@ -616,11 +620,11 @@ export function Projects() {
               initial={{ opacity: 0, y: 20 }}
               animate={isInView ? { opacity: 1, y: 0 } : {}}
               transition={{ duration: 0.5, delay: 0.2 }}
-              className="font-display text-3xl sm:text-4xl md:text-5xl font-bold text-foreground mb-4 sm:mb-6"
-            >
-              Featured{" "}
-              <span className="relative inline-block">
-                <span className="gradient-text-accent">Projects</span>
+            className="font-display text-3xl sm:text-4xl md:text-5xl font-bold text-foreground mb-4 sm:mb-6"
+          >
+            {t("projects.title").split(" ")[0]}{" "}
+            <span className="relative inline-block">
+              <span className="gradient-text-accent">{t("projects.title").split(" ").slice(1).join(" ") || "Projects"}</span>
                 <motion.span
                   initial={{ scaleX: 0 }}
                   animate={isInView ? { scaleX: 1 } : {}}
@@ -632,10 +636,10 @@ export function Projects() {
             <motion.p
               initial={{ opacity: 0, y: 20 }}
               animate={isInView ? { opacity: 1, y: 0 } : {}}
-              transition={{ duration: 0.5, delay: 0.3 }}
+            transition={{ duration: 0.5, delay: 0.3 }}
               className="text-base sm:text-lg text-foreground-secondary max-w-2xl mx-auto px-4"
             >
-              A selection of projects that showcase my skills and passion for development
+              {t("projects.subtitle")}
             </motion.p>
           </div>
 
