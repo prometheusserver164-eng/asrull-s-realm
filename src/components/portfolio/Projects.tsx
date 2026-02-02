@@ -197,8 +197,10 @@ function ProjectCard({ project, index, isInView }: { project: Project; index: nu
                       className="w-full h-full object-cover"
                     />
                   ) : (
-                    <div className="w-full h-full flex items-center justify-center">
-                      <span className="text-8xl opacity-20">🚀</span>
+                    <div className="w-full h-full flex items-center justify-center bg-gradient-to-br from-primary/5 to-accent/5">
+                      <div className="w-20 h-20 rounded-2xl bg-primary/10 border border-primary/20 flex items-center justify-center">
+                        <Globe className="w-10 h-10 text-primary/50" />
+                      </div>
                     </div>
                   )}
                 </div>
@@ -277,7 +279,7 @@ function WebsitePreview({
     setIsLoading(false);
   };
 
-  // If iframe fails or no URL, show fallback image
+  // If iframe fails or user clicks "show image", show fallback
   if (hasError || !showIframe) {
     return fallbackImage ? (
       <img
@@ -286,9 +288,14 @@ function WebsitePreview({
         className="w-full h-full object-cover"
       />
     ) : (
-      <div className="w-full h-full flex flex-col items-center justify-center gap-2 text-foreground-muted">
-        <Globe className="w-12 h-12 opacity-30" />
-        <span className="text-sm">Preview not available</span>
+      <div className="w-full h-full flex flex-col items-center justify-center gap-3 bg-gradient-to-br from-primary/5 to-accent/5">
+        <div className="w-16 h-16 rounded-2xl bg-primary/10 border border-primary/20 flex items-center justify-center">
+          <Globe className="w-8 h-8 text-primary/50" />
+        </div>
+        <div className="text-center px-4">
+          <p className="text-sm font-medium text-foreground mb-1">Website Preview</p>
+          <p className="text-xs text-foreground-muted">Click "Live" to visit the site</p>
+        </div>
       </div>
     );
   }
@@ -370,19 +377,21 @@ function ProjectMediaCarousel({
     slides.push({ type: 'video', content: project.video_url! });
   }
 
-  // If no slides, show placeholder
+  // If no slides, show placeholder (no emoji per user preference)
   if (slides.length === 0) {
     return (
-      <div className="w-full h-full flex items-center justify-center">
+      <div className="w-full h-full flex items-center justify-center bg-gradient-to-br from-primary/5 to-accent/5">
         <motion.div
           animate={{ 
-            rotate: isHovered ? [0, 10, -10, 0] : 0,
-            scale: isHovered ? 1.2 : 1 
+            scale: isHovered ? 1.1 : 1 
           }}
           transition={{ duration: 0.5 }}
-          className="text-6xl opacity-20"
+          className="flex flex-col items-center gap-2"
         >
-          🚀
+          <div className="w-16 h-16 rounded-2xl bg-primary/10 border border-primary/20 flex items-center justify-center">
+            <Globe className="w-8 h-8 text-primary/50" />
+          </div>
+          <span className="text-sm text-foreground-muted">No preview</span>
         </motion.div>
       </div>
     );
