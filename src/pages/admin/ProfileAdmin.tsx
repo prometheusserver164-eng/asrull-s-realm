@@ -7,7 +7,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
-
+import { ImageDropzone } from "@/components/ImageDropzone";
 interface ProfileData {
   id: string;
   name: string;
@@ -188,31 +188,44 @@ export default function ProfileAdmin() {
           </h2>
 
           <div className="grid md:grid-cols-2 gap-6">
+            {/* Avatar Upload */}
             <div>
               <label className="block text-sm font-medium text-foreground mb-2">
-                Avatar URL
+                Avatar
               </label>
-              <Input
-                name="avatar_url"
-                value={formData.avatar_url || ""}
-                onChange={handleChange}
-                placeholder="https://..."
-                className="bg-card border-border"
+              <ImageDropzone
+                value={formData.avatar_url || undefined}
+                onChange={(url) =>
+                  setFormData((prev) => ({ ...prev, avatar_url: url }))
+                }
+                bucket="profile-assets"
+                folder="avatars"
               />
+              <p className="text-xs text-foreground-muted mt-2">
+                Drag & drop or click to upload
+              </p>
             </div>
+
+            {/* Favicon Upload */}
             <div>
               <label className="block text-sm font-medium text-foreground mb-2">
-                Favicon URL
+                Favicon
               </label>
-              <Input
-                name="favicon_url"
-                value={formData.favicon_url || ""}
-                onChange={handleChange}
-                placeholder="https://..."
-                className="bg-card border-border"
+              <ImageDropzone
+                value={formData.favicon_url || undefined}
+                onChange={(url) =>
+                  setFormData((prev) => ({ ...prev, favicon_url: url }))
+                }
+                bucket="profile-assets"
+                folder="favicons"
               />
+              <p className="text-xs text-foreground-muted mt-2">
+                Recommended: 32x32 or 64x64 pixels
+              </p>
             </div>
-            <div>
+
+            {/* Accent Color */}
+            <div className="md:col-span-2">
               <label className="block text-sm font-medium text-foreground mb-2">
                 Accent Color
               </label>
@@ -222,7 +235,7 @@ export default function ProfileAdmin() {
                   value={formData.accent_color || ""}
                   onChange={handleChange}
                   placeholder="#7F1D1D"
-                  className="bg-card border-border flex-1"
+                  className="bg-card border-border flex-1 max-w-xs"
                 />
                 <div
                   className="w-12 h-10 rounded-lg border border-border"
