@@ -17,84 +17,116 @@ function generateRandomPoints(count: number, spread: number) {
   return positions;
 }
 
-// Generate rose shape points using parametric equations
+// Generate realistic rose shape using layered petal approach
 function generateRosePoints(count: number, scale: number) {
   const positions = new Float32Array(count * 3);
   
+  // Rose consists of multiple petal layers
+  const petalLayers = 6;
+  const pointsPerLayer = Math.floor(count / petalLayers);
+  
   for (let i = 0; i < count; i++) {
-    // Rose parameters
-    const t = (i / count) * Math.PI * 2 * 6; // Multiple rotations
-    const u = Math.random() * Math.PI; // Vertical angle
+    const layer = Math.floor(i / pointsPerLayer);
+    const indexInLayer = i % pointsPerLayer;
+    const t = (indexInLayer / pointsPerLayer) * Math.PI * 2;
     
-    // Rose curve: r = cos(k*theta) for a k-petaled rose
-    const k = 5; // 5 petals
-    const r = Math.cos(k * t * 0.5) + 0.3;
+    // Each layer has different radius and height
+    const layerProgress = layer / petalLayers;
     
-    // Add some variation for 3D effect
-    const heightFactor = Math.sin(u) * 0.8;
-    const radiusFactor = Math.abs(r) * (0.8 + Math.random() * 0.4);
+    // Inner layers are tighter and higher, outer layers spread out
+    const baseRadius = 0.15 + layerProgress * 0.6;
+    const layerHeight = (1 - layerProgress) * 0.5;
     
-    // Spiral from center outward for rose bud effect
-    const spiralT = i / count;
-    const spiralRadius = spiralT * radiusFactor * scale;
-    const spiralHeight = (1 - spiralT) * scale * 0.5 + heightFactor * spiralT * scale * 0.3;
+    // Petal shape - wavy edge
+    const petalCount = 5;
+    const petalWave = Math.sin(t * petalCount) * 0.15 * (1 + layerProgress);
+    const radius = (baseRadius + petalWave) * scale;
     
-    positions[i * 3] = Math.cos(t) * spiralRadius;
-    positions[i * 3 + 1] = spiralHeight - scale * 0.2;
-    positions[i * 3 + 2] = Math.sin(t) * spiralRadius;
+    // Spiral effect for natural rose look
+    const spiralAngle = t + layerProgress * Math.PI * 0.3;
+    
+    // Cup shape - petals curve inward at edges
+    const cupEffect = Math.cos(t * petalCount * 0.5) * 0.1 * layerProgress;
+    const height = (layerHeight + cupEffect) * scale;
+    
+    // Add some randomness for organic feel
+    const noise = 0.03 * scale;
+    
+    positions[i * 3] = Math.cos(spiralAngle) * radius + (Math.random() - 0.5) * noise;
+    positions[i * 3 + 1] = height + (Math.random() - 0.5) * noise;
+    positions[i * 3 + 2] = Math.sin(spiralAngle) * radius + (Math.random() - 0.5) * noise;
   }
   
   return positions;
 }
 
-// Generate stem and leaves
-function generateStemPoints(count: number, scale: number) {
+// Generate center of rose (tight spiral)
+function generateRoseCenterPoints(count: number, scale: number) {
   const positions = new Float32Array(count * 3);
   
   for (let i = 0; i < count; i++) {
     const t = i / count;
+    const angle = t * Math.PI * 8; // Multiple spirals
+    const radius = t * 0.25 * scale;
+    const height = (1 - t * 0.5) * 0.6 * scale;
     
-    if (i < count * 0.6) {
-      // Stem - curved line going down
-      const stemT = (i / (count * 0.6));
-      const curve = Math.sin(stemT * Math.PI * 2) * 0.1;
-      positions[i * 3] = curve * scale;
-      positions[i * 3 + 1] = -stemT * scale * 1.5 - scale * 0.2;
-      positions[i * 3 + 2] = Math.cos(stemT * Math.PI) * 0.05 * scale;
-    } else {
-      // Leaves
-      const leafT = (i - count * 0.6) / (count * 0.4);
-      const leafAngle = Math.floor(leafT * 2) * Math.PI + Math.PI * 0.25;
-      const leafProgress = (leafT * 2) % 1;
-      const leafShape = Math.sin(leafProgress * Math.PI) * 0.4;
-      
-      positions[i * 3] = Math.cos(leafAngle) * leafShape * scale;
-      positions[i * 3 + 1] = -scale * 0.8 - leafProgress * 0.3 * scale + Math.floor(leafT * 2) * 0.4 * scale;
-      positions[i * 3 + 2] = Math.sin(leafAngle) * leafShape * scale;
-    }
+    positions[i * 3] = Math.cos(angle) * radius;
+    positions[i * 3 + 1] = height;
+    positions[i * 3 + 2] = Math.sin(angle) * radius;
   }
   
   return positions;
 }
 
-function MorphingParticles() {
+// Generate stem
+function generateStemPoints(count: number, scale: number) {
+  const positions = new Float32Array(count * 3);
+  
+  const stemCount = Math.floor(count * 0.7);
+  const leafCount = count - stemCount;
+  
+  for (let i = 0; i < stemCount; i++) {
+    const t = i / stemCount;
+    // Slightly curved stem
+    const curve = Math.sin(t * Math.PI) * 0.08;
+    const noise = (Math.random() - 0.5) * 0.02;
+    
+    positions[i * 3] = curve * scale + noise;
+    positions[i * 3 + 1] = -t * 1.8 * scale;
+    positions[i * 3 + 2] = noise;
+  }
+  
+  // Leaves
+  for (let i = 0; i < leafCount; i++) {
+    const leafIndex = Math.floor(i / (leafCount / 2));
+    const t = (i % (leafCount / 2)) / (leafCount / 2);
+    
+    const leafAngle = leafIndex === 0 ? Math.PI * 0.3 : -Math.PI * 0.3;
+    const leafY = leafIndex === 0 ? -0.6 : -1.0;
+    
+    // Leaf shape
+    const leafLength = Math.sin(t * Math.PI) * 0.35;
+    const leafWidth = Math.sin(t * Math.PI) * 0.08;
+    
+    const idx = stemCount + i;
+    positions[idx * 3] = Math.cos(leafAngle) * leafLength * scale + Math.sin(leafAngle) * leafWidth * scale;
+    positions[idx * 3 + 1] = leafY * scale + t * 0.1 * scale;
+    positions[idx * 3 + 2] = Math.sin(leafAngle) * leafLength * scale;
+  }
+  
+  return positions;
+}
+
+// Main morphing component for rose petals
+function RosePetals() {
   const pointsRef = useRef<THREE.Points>(null);
-  const pointsRef2 = useRef<THREE.Points>(null);
   
-  const particleCount = 4000;
-  const particleCount2 = 1500;
+  const particleCount = 5000;
   
-  // Generate all shape positions
-  const randomPositions = useMemo(() => generateRandomPoints(particleCount, 6), []);
-  const rosePositions = useMemo(() => generateRosePoints(particleCount, 1.8), []);
-  const stemRandomPositions = useMemo(() => generateRandomPoints(particleCount2, 5), []);
-  const stemPositions = useMemo(() => generateStemPoints(particleCount2, 1.8), []);
-  
-  // Current positions that will be animated
+  const randomPositions = useMemo(() => generateRandomPoints(particleCount, 5), []);
+  const rosePositions = useMemo(() => generateRosePoints(particleCount, 1.5), []);
   const currentPositions = useMemo(() => new Float32Array(randomPositions), [randomPositions]);
-  const currentStemPositions = useMemo(() => new Float32Array(stemRandomPositions), [stemRandomPositions]);
   
-  // Animation progress ref
   const morphProgress = useRef(0);
   const timeRef = useRef(0);
   
@@ -102,8 +134,79 @@ function MorphingParticles() {
     timeRef.current += delta;
     const time = timeRef.current;
     
-    // Smooth morphing progress (0 to 1 over time)
-    // Start morphing after 0.5 seconds, complete by 2 seconds
+    const morphStart = 0.3;
+    const morphDuration = 2.0;
+    
+    if (time > morphStart) {
+      morphProgress.current = Math.min((time - morphStart) / morphDuration, 1);
+    }
+    
+    // Smooth easing
+    const easeOutQuart = (t: number) => 1 - Math.pow(1 - t, 4);
+    const easedProgress = easeOutQuart(morphProgress.current);
+    
+    if (pointsRef.current) {
+      const positions = pointsRef.current.geometry.attributes.position.array as Float32Array;
+      
+      for (let i = 0; i < particleCount * 3; i += 3) {
+        const idx = i / 3;
+        
+        // Staggered animation from center outward
+        const distFromCenter = Math.sqrt(
+          rosePositions[i] ** 2 + 
+          rosePositions[i + 2] ** 2
+        );
+        const stagger = distFromCenter * 0.3;
+        const adjustedProgress = Math.max(0, Math.min(1, (easedProgress * 1.5 - stagger)));
+        
+        positions[i] = randomPositions[i] + (rosePositions[i] - randomPositions[i]) * adjustedProgress;
+        positions[i + 1] = randomPositions[i + 1] + (rosePositions[i + 1] - randomPositions[i + 1]) * adjustedProgress;
+        positions[i + 2] = randomPositions[i + 2] + (rosePositions[i + 2] - randomPositions[i + 2]) * adjustedProgress;
+        
+        // Gentle breathing motion when formed
+        if (adjustedProgress > 0.9) {
+          const breathe = Math.sin(time * 1.5 + idx * 0.002) * 0.008 * (adjustedProgress - 0.9) * 10;
+          positions[i] *= (1 + breathe);
+          positions[i + 2] *= (1 + breathe);
+        }
+      }
+      
+      pointsRef.current.geometry.attributes.position.needsUpdate = true;
+      pointsRef.current.rotation.y = time * 0.1;
+    }
+  });
+  
+  return (
+    <Points ref={pointsRef} positions={currentPositions} stride={3} frustumCulled={false}>
+      <PointMaterial
+        transparent
+        color="#e11d48"
+        size={0.022}
+        sizeAttenuation={true}
+        depthWrite={false}
+        opacity={0.95}
+      />
+    </Points>
+  );
+}
+
+// Rose center (darker red, tighter)
+function RoseCenter() {
+  const pointsRef = useRef<THREE.Points>(null);
+  
+  const particleCount = 1500;
+  
+  const randomPositions = useMemo(() => generateRandomPoints(particleCount, 4), []);
+  const centerPositions = useMemo(() => generateRoseCenterPoints(particleCount, 1.5), []);
+  const currentPositions = useMemo(() => new Float32Array(randomPositions), [randomPositions]);
+  
+  const morphProgress = useRef(0);
+  const timeRef = useRef(0);
+  
+  useFrame((state, delta) => {
+    timeRef.current += delta;
+    const time = timeRef.current;
+    
     const morphStart = 0.5;
     const morphDuration = 1.8;
     
@@ -111,115 +214,116 @@ function MorphingParticles() {
       morphProgress.current = Math.min((time - morphStart) / morphDuration, 1);
     }
     
-    // Easing function for smooth transition
-    const easeInOutCubic = (t: number) => {
-      return t < 0.5 
-        ? 4 * t * t * t 
-        : 1 - Math.pow(-2 * t + 2, 3) / 2;
-    };
+    const easeOutQuart = (t: number) => 1 - Math.pow(1 - t, 4);
+    const easedProgress = easeOutQuart(morphProgress.current);
     
-    const easedProgress = easeInOutCubic(morphProgress.current);
-    
-    // Update main particle positions
     if (pointsRef.current) {
       const positions = pointsRef.current.geometry.attributes.position.array as Float32Array;
       
       for (let i = 0; i < particleCount * 3; i += 3) {
-        // Interpolate between random and rose positions
         const idx = i / 3;
+        const individualProgress = Math.max(0, Math.min(1, easedProgress * 1.2 - (idx / particleCount) * 0.2));
         
-        // Add some individual delay for organic feel
-        const individualDelay = (idx / particleCount) * 0.3;
-        const adjustedProgress = Math.max(0, Math.min(1, (easedProgress - individualDelay) / (1 - individualDelay)));
-        
-        positions[i] = randomPositions[i] + (rosePositions[i] - randomPositions[i]) * adjustedProgress;
-        positions[i + 1] = randomPositions[i + 1] + (rosePositions[i + 1] - randomPositions[i + 1]) * adjustedProgress;
-        positions[i + 2] = randomPositions[i + 2] + (rosePositions[i + 2] - randomPositions[i + 2]) * adjustedProgress;
-        
-        // Add gentle floating motion after morphed
-        if (adjustedProgress > 0.8) {
-          const floatAmount = (adjustedProgress - 0.8) * 5;
-          positions[i + 1] += Math.sin(time * 2 + idx * 0.01) * 0.02 * floatAmount;
-        }
+        positions[i] = randomPositions[i] + (centerPositions[i] - randomPositions[i]) * individualProgress;
+        positions[i + 1] = randomPositions[i + 1] + (centerPositions[i + 1] - randomPositions[i + 1]) * individualProgress;
+        positions[i + 2] = randomPositions[i + 2] + (centerPositions[i + 2] - randomPositions[i + 2]) * individualProgress;
       }
       
       pointsRef.current.geometry.attributes.position.needsUpdate = true;
-      
-      // Slow rotation
-      pointsRef.current.rotation.y = time * 0.15;
-    }
-    
-    // Update stem/leaves positions
-    if (pointsRef2.current) {
-      const positions = pointsRef2.current.geometry.attributes.position.array as Float32Array;
-      
-      for (let i = 0; i < particleCount2 * 3; i += 3) {
-        const idx = i / 3;
-        
-        // Stem morphs slightly after the rose
-        const stemDelay = 0.2;
-        const adjustedProgress = Math.max(0, Math.min(1, (easedProgress - stemDelay) / (1 - stemDelay)));
-        const individualDelay = (idx / particleCount2) * 0.2;
-        const finalProgress = Math.max(0, Math.min(1, (adjustedProgress - individualDelay) / (1 - individualDelay)));
-        
-        positions[i] = stemRandomPositions[i] + (stemPositions[i] - stemRandomPositions[i]) * finalProgress;
-        positions[i + 1] = stemRandomPositions[i + 1] + (stemPositions[i + 1] - stemRandomPositions[i + 1]) * finalProgress;
-        positions[i + 2] = stemRandomPositions[i + 2] + (stemPositions[i + 2] - stemRandomPositions[i + 2]) * finalProgress;
-      }
-      
-      pointsRef2.current.geometry.attributes.position.needsUpdate = true;
-      pointsRef2.current.rotation.y = time * 0.15;
+      pointsRef.current.rotation.y = time * 0.1;
     }
   });
   
   return (
-    <>
-      {/* Rose petals */}
-      <Points ref={pointsRef} positions={currentPositions} stride={3} frustumCulled={false}>
-        <PointMaterial
-          transparent
-          color="#ff4d6d"
-          size={0.025}
-          sizeAttenuation={true}
-          depthWrite={false}
-          opacity={0.9}
-        />
-      </Points>
-      
-      {/* Stem and leaves */}
-      <Points ref={pointsRef2} positions={currentStemPositions} stride={3} frustumCulled={false}>
-        <PointMaterial
-          transparent
-          color="#22c55e"
-          size={0.018}
-          sizeAttenuation={true}
-          depthWrite={false}
-          opacity={0.85}
-        />
-      </Points>
-    </>
+    <Points ref={pointsRef} positions={currentPositions} stride={3} frustumCulled={false}>
+      <PointMaterial
+        transparent
+        color="#9f1239"
+        size={0.018}
+        sizeAttenuation={true}
+        depthWrite={false}
+        opacity={0.95}
+      />
+    </Points>
   );
 }
 
-// Ambient particles for atmosphere
-function AmbientParticles() {
+// Stem and leaves
+function StemAndLeaves() {
+  const pointsRef = useRef<THREE.Points>(null);
+  
+  const particleCount = 1200;
+  
+  const randomPositions = useMemo(() => generateRandomPoints(particleCount, 4), []);
+  const stemPositions = useMemo(() => generateStemPoints(particleCount, 1.5), []);
+  const currentPositions = useMemo(() => new Float32Array(randomPositions), [randomPositions]);
+  
+  const morphProgress = useRef(0);
+  const timeRef = useRef(0);
+  
+  useFrame((state, delta) => {
+    timeRef.current += delta;
+    const time = timeRef.current;
+    
+    const morphStart = 0.8;
+    const morphDuration = 1.5;
+    
+    if (time > morphStart) {
+      morphProgress.current = Math.min((time - morphStart) / morphDuration, 1);
+    }
+    
+    const easeOutQuart = (t: number) => 1 - Math.pow(1 - t, 4);
+    const easedProgress = easeOutQuart(morphProgress.current);
+    
+    if (pointsRef.current) {
+      const positions = pointsRef.current.geometry.attributes.position.array as Float32Array;
+      
+      for (let i = 0; i < particleCount * 3; i += 3) {
+        const idx = i / 3;
+        const individualProgress = Math.max(0, Math.min(1, easedProgress * 1.3 - (idx / particleCount) * 0.3));
+        
+        positions[i] = randomPositions[i] + (stemPositions[i] - randomPositions[i]) * individualProgress;
+        positions[i + 1] = randomPositions[i + 1] + (stemPositions[i + 1] - randomPositions[i + 1]) * individualProgress;
+        positions[i + 2] = randomPositions[i + 2] + (stemPositions[i + 2] - randomPositions[i + 2]) * individualProgress;
+      }
+      
+      pointsRef.current.geometry.attributes.position.needsUpdate = true;
+      pointsRef.current.rotation.y = time * 0.1;
+    }
+  });
+  
+  return (
+    <Points ref={pointsRef} positions={currentPositions} stride={3} frustumCulled={false}>
+      <PointMaterial
+        transparent
+        color="#15803d"
+        size={0.016}
+        sizeAttenuation={true}
+        depthWrite={false}
+        opacity={0.9}
+      />
+    </Points>
+  );
+}
+
+// Ambient sparkle particles
+function AmbientSparkles() {
   const pointsRef = useRef<THREE.Points>(null);
   
   const positions = useMemo(() => {
-    const count = 800;
+    const count = 500;
     const arr = new Float32Array(count * 3);
     for (let i = 0; i < count; i++) {
-      arr[i * 3] = (Math.random() - 0.5) * 10;
-      arr[i * 3 + 1] = (Math.random() - 0.5) * 10;
-      arr[i * 3 + 2] = (Math.random() - 0.5) * 10;
+      arr[i * 3] = (Math.random() - 0.5) * 8;
+      arr[i * 3 + 1] = (Math.random() - 0.5) * 8;
+      arr[i * 3 + 2] = (Math.random() - 0.5) * 8;
     }
     return arr;
   }, []);
   
   useFrame((state) => {
     if (pointsRef.current) {
-      pointsRef.current.rotation.y = state.clock.getElapsedTime() * 0.02;
-      pointsRef.current.rotation.x = Math.sin(state.clock.getElapsedTime() * 0.1) * 0.1;
+      pointsRef.current.rotation.y = state.clock.getElapsedTime() * 0.03;
     }
   });
   
@@ -227,11 +331,11 @@ function AmbientParticles() {
     <Points ref={pointsRef} positions={positions} stride={3} frustumCulled={false}>
       <PointMaterial
         transparent
-        color="#14F1D9"
-        size={0.008}
+        color="#fda4af"
+        size={0.006}
         sizeAttenuation={true}
         depthWrite={false}
-        opacity={0.3}
+        opacity={0.4}
       />
     </Points>
   );
@@ -240,9 +344,11 @@ function AmbientParticles() {
 function Scene() {
   return (
     <>
-      <ambientLight intensity={0.5} />
-      <MorphingParticles />
-      <AmbientParticles />
+      <ambientLight intensity={0.6} />
+      <RosePetals />
+      <RoseCenter />
+      <StemAndLeaves />
+      <AmbientSparkles />
     </>
   );
 }
@@ -252,7 +358,7 @@ interface LoadingScreenProps {
   minDuration?: number;
 }
 
-export function LoadingScreen({ onLoadingComplete, minDuration = 3000 }: LoadingScreenProps) {
+export function LoadingScreen({ onLoadingComplete, minDuration = 3500 }: LoadingScreenProps) {
   const [isVisible, setIsVisible] = useState(true);
   const [progress, setProgress] = useState(0);
   
@@ -269,7 +375,7 @@ export function LoadingScreen({ onLoadingComplete, minDuration = 3000 }: Loading
         setTimeout(() => {
           setIsVisible(false);
           onLoadingComplete?.();
-        }, 300);
+        }, 400);
       }
     }, 50);
     
@@ -281,14 +387,14 @@ export function LoadingScreen({ onLoadingComplete, minDuration = 3000 }: Loading
       {isVisible && (
         <motion.div
           initial={{ opacity: 1 }}
-          exit={{ opacity: 0, scale: 1.1 }}
+          exit={{ opacity: 0, scale: 1.05 }}
           transition={{ duration: 0.8, ease: "easeInOut" }}
           className="fixed inset-0 z-[100] bg-background flex flex-col items-center justify-center overflow-hidden"
         >
           {/* 3D Canvas */}
           <div className="absolute inset-0">
             <Canvas
-              camera={{ position: [0, 0.5, 4.5], fov: 50 }}
+              camera={{ position: [0, 0.3, 4], fov: 45 }}
               gl={{ antialias: true, alpha: true }}
             >
               <Suspense fallback={null}>
@@ -298,29 +404,29 @@ export function LoadingScreen({ onLoadingComplete, minDuration = 3000 }: Loading
           </div>
           
           {/* Overlay Content */}
-          <div className="relative z-10 flex flex-col items-center mt-[40vh]">
+          <div className="relative z-10 flex flex-col items-center mt-[45vh]">
             {/* Logo */}
             <motion.div
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.2, duration: 0.6 }}
-              className="mb-6 sm:mb-8"
+              transition={{ delay: 0.3, duration: 0.6 }}
+              className="mb-5 sm:mb-6"
             >
-              <h1 className="font-display text-3xl sm:text-4xl md:text-5xl font-bold text-foreground">
-                Asrull<span className="text-primary">.</span>
+              <h1 className="font-display text-2xl sm:text-3xl md:text-4xl font-bold text-foreground">
+                Asrull<span className="text-rose-500">.</span>
               </h1>
             </motion.div>
             
             {/* Loading Bar */}
             <motion.div
-              initial={{ opacity: 0, width: 0 }}
-              animate={{ opacity: 1, width: 200 }}
-              transition={{ delay: 0.4, duration: 0.5 }}
+              initial={{ opacity: 0, scaleX: 0 }}
+              animate={{ opacity: 1, scaleX: 1 }}
+              transition={{ delay: 0.5, duration: 0.5 }}
               className="relative"
             >
-              <div className="w-40 sm:w-48 md:w-64 h-1 bg-border/30 rounded-full overflow-hidden backdrop-blur-sm">
+              <div className="w-36 sm:w-44 md:w-56 h-0.5 sm:h-1 bg-border/20 rounded-full overflow-hidden backdrop-blur-sm">
                 <motion.div
-                  className="h-full bg-gradient-to-r from-pink-500 via-rose-500 to-primary rounded-full"
+                  className="h-full bg-gradient-to-r from-rose-600 via-rose-500 to-pink-400 rounded-full"
                   style={{ width: `${progress}%` }}
                   transition={{ duration: 0.1 }}
                 />
@@ -330,8 +436,8 @@ export function LoadingScreen({ onLoadingComplete, minDuration = 3000 }: Loading
               <motion.p
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
-                transition={{ delay: 0.6 }}
-                className="text-center mt-3 sm:mt-4 text-xs sm:text-sm text-foreground-muted"
+                transition={{ delay: 0.7 }}
+                className="text-center mt-2 sm:mt-3 text-[10px] sm:text-xs text-foreground-muted font-medium"
               >
                 {Math.round(progress)}%
               </motion.p>
@@ -340,17 +446,18 @@ export function LoadingScreen({ onLoadingComplete, minDuration = 3000 }: Loading
             {/* Loading Text */}
             <motion.p
               initial={{ opacity: 0 }}
-              animate={{ opacity: [0, 1, 0.5, 1] }}
-              transition={{ delay: 0.8, duration: 2, repeat: Infinity }}
-              className="mt-4 sm:mt-6 text-foreground-secondary text-xs sm:text-sm tracking-wider uppercase"
+              animate={{ opacity: [0, 0.8, 0.4, 0.8] }}
+              transition={{ delay: 1, duration: 2.5, repeat: Infinity }}
+              className="mt-3 sm:mt-4 text-foreground-secondary/70 text-[10px] sm:text-xs tracking-widest uppercase"
             >
-              Blooming Experience
+              Blooming...
             </motion.p>
           </div>
           
           {/* Gradient Overlays */}
-          <div className="absolute inset-0 bg-gradient-radial from-transparent via-transparent to-background pointer-events-none" />
-          <div className="absolute bottom-0 left-0 right-0 h-24 sm:h-32 bg-gradient-to-t from-background to-transparent pointer-events-none" />
+          <div className="absolute inset-0 bg-gradient-radial from-rose-500/5 via-transparent to-background pointer-events-none" />
+          <div className="absolute bottom-0 left-0 right-0 h-20 sm:h-28 bg-gradient-to-t from-background via-background/80 to-transparent pointer-events-none" />
+          <div className="absolute top-0 left-0 right-0 h-16 sm:h-24 bg-gradient-to-b from-background/50 to-transparent pointer-events-none" />
         </motion.div>
       )}
     </AnimatePresence>
