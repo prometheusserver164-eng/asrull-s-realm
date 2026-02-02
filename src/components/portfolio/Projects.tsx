@@ -146,37 +146,37 @@ function ProjectCard({ project, index, isInView }: { project: Project; index: nu
         </div>
 
         {/* Content */}
-        <div className="p-6 relative">
+        <div className="p-4 sm:p-5 lg:p-6 relative">
           <div className="flex items-start justify-between mb-2">
-            <h3 className="font-display text-xl font-semibold text-foreground group-hover:text-primary transition-colors duration-300">
+            <h3 className="font-display text-base sm:text-lg lg:text-xl font-semibold text-foreground group-hover:text-primary transition-colors duration-300 line-clamp-1">
               {project.title}
             </h3>
             <motion.div
               animate={{ x: isHovered ? 0 : -5, opacity: isHovered ? 1 : 0 }}
               transition={{ duration: 0.2 }}
             >
-              <ArrowUpRight className="w-5 h-5 text-primary" />
+              <ArrowUpRight className="w-4 h-4 sm:w-5 sm:h-5 text-primary flex-shrink-0 ml-2" />
             </motion.div>
           </div>
-          <p className="text-foreground-secondary text-sm mb-4 line-clamp-2">
+          <p className="text-foreground-secondary text-xs sm:text-sm mb-3 sm:mb-4 line-clamp-2">
             {project.description || "A project built with modern technologies."}
           </p>
 
           {/* Tech Stack */}
-          <div className="flex flex-wrap gap-2">
-            {project.tech_stack?.slice(0, 4).map((tech, i) => (
+          <div className="flex flex-wrap gap-1.5 sm:gap-2">
+            {project.tech_stack?.slice(0, 3).map((tech, i) => (
               <motion.span
                 key={tech}
                 initial={{ opacity: 0, scale: 0.8 }}
                 animate={{ opacity: 1, scale: 1 }}
                 transition={{ delay: 0.1 * i }}
-                className="badge-tech"
+                className="badge-tech text-[10px] sm:text-xs"
               >
                 {tech}
               </motion.span>
             ))}
-            {project.tech_stack && project.tech_stack.length > 4 && (
-              <span className="badge-tech">+{project.tech_stack.length - 4}</span>
+            {project.tech_stack && project.tech_stack.length > 3 && (
+              <span className="badge-tech text-[10px] sm:text-xs">+{project.tech_stack.length - 3}</span>
             )}
           </div>
         </div>
@@ -318,18 +318,18 @@ export function Projects() {
   ];
 
   return (
-    <section id="projects" className="relative py-32 overflow-hidden">
+    <section id="projects" className="relative py-16 sm:py-24 lg:py-32 overflow-hidden">
       {/* Background Decoration */}
       <div className="absolute inset-0 pointer-events-none">
         <motion.div
           initial={{ opacity: 0 }}
           animate={isInView ? { opacity: 0.05 } : {}}
           transition={{ duration: 1 }}
-          className="absolute top-1/4 right-0 w-96 h-96 rounded-full bg-primary blur-3xl"
+          className="absolute top-1/4 right-0 w-64 sm:w-80 lg:w-96 h-64 sm:h-80 lg:h-96 rounded-full bg-primary blur-3xl"
         />
       </div>
 
-      <div className="section-container">
+      <div className="section-container px-4 sm:px-6 lg:px-8">
         <motion.div
           ref={ref}
           variants={containerVariants}
@@ -338,24 +338,24 @@ export function Projects() {
           className="max-w-6xl mx-auto"
         >
           {/* Section Header */}
-          <div className="text-center mb-16">
+          <div className="text-center mb-10 sm:mb-12 lg:mb-16">
             <motion.div
               initial={{ opacity: 0, y: 20 }}
               animate={isInView ? { opacity: 1, y: 0 } : {}}
               transition={{ duration: 0.5, delay: 0.1 }}
-              className="inline-flex items-center gap-2 mb-4"
+              className="inline-flex items-center gap-2 mb-3 sm:mb-4"
             >
-              <Sparkles className="w-4 h-4 text-primary" />
-              <span className="text-primary text-sm font-medium uppercase tracking-widest">
+              <Sparkles className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-primary" />
+              <span className="text-primary text-xs sm:text-sm font-medium uppercase tracking-widest">
                 My Work
               </span>
-              <Sparkles className="w-4 h-4 text-primary" />
+              <Sparkles className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-primary" />
             </motion.div>
             <motion.h2
               initial={{ opacity: 0, y: 20 }}
               animate={isInView ? { opacity: 1, y: 0 } : {}}
               transition={{ duration: 0.5, delay: 0.2 }}
-              className="font-display text-4xl md:text-5xl font-bold text-foreground mb-6"
+              className="font-display text-3xl sm:text-4xl md:text-5xl font-bold text-foreground mb-4 sm:mb-6"
             >
               Featured{" "}
               <span className="relative inline-block">
@@ -364,7 +364,7 @@ export function Projects() {
                   initial={{ scaleX: 0 }}
                   animate={isInView ? { scaleX: 1 } : {}}
                   transition={{ duration: 0.8, delay: 0.8, ease: "easeOut" }}
-                  className="absolute -bottom-2 left-0 w-full h-1 bg-gradient-to-r from-primary to-accent origin-left rounded-full"
+                  className="absolute -bottom-1 sm:-bottom-2 left-0 w-full h-0.5 sm:h-1 bg-gradient-to-r from-primary to-accent origin-left rounded-full"
                 />
               </span>
             </motion.h2>
@@ -372,7 +372,7 @@ export function Projects() {
               initial={{ opacity: 0, y: 20 }}
               animate={isInView ? { opacity: 1, y: 0 } : {}}
               transition={{ duration: 0.5, delay: 0.3 }}
-              className="text-lg text-foreground-secondary max-w-2xl mx-auto"
+              className="text-base sm:text-lg text-foreground-secondary max-w-2xl mx-auto px-4"
             >
               A selection of projects that showcase my skills and passion for development
             </motion.p>
@@ -381,7 +381,7 @@ export function Projects() {
           {/* Projects Grid - Bento Style */}
           <motion.div
             variants={containerVariants}
-            className="grid md:grid-cols-2 lg:grid-cols-3 gap-6"
+            className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-5 lg:gap-6"
           >
             {displayProjects.map((project, index) => (
               <ProjectCard
