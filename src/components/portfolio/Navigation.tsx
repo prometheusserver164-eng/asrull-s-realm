@@ -5,20 +5,23 @@ import { useProfile } from "@/hooks/useProfile";
 import { Link, useLocation } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { ThemeToggle } from "@/components/ThemeToggle";
-
-const navLinks = [
-  { href: "#about", label: "About" },
-  { href: "#tech-stack", label: "Tech Stack" },
-  { href: "#projects", label: "Projects" },
-  { href: "#experience", label: "Experience" },
-  { href: "#contact", label: "Contact" },
-];
+import { LanguageSwitcher } from "@/components/LanguageSwitcher";
+import { useLanguage } from "@/contexts/LanguageContext";
 
 export function Navigation() {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const { data: profile } = useProfile();
   const location = useLocation();
+  const { t } = useLanguage();
+
+  const navLinks = [
+    { href: "#about", labelKey: "nav.about" },
+    { href: "#skills", labelKey: "nav.tech_stack" },
+    { href: "#projects", labelKey: "nav.projects" },
+    { href: "#experience", labelKey: "nav.experience" },
+    { href: "#contact", labelKey: "nav.contact" },
+  ];
 
   useEffect(() => {
     const handleScroll = () => {
@@ -66,20 +69,21 @@ export function Navigation() {
             </Link>
 
             {/* Desktop Navigation */}
-            <nav className="hidden md:flex items-center gap-8">
+            <nav className="hidden md:flex items-center gap-6">
               {navLinks.map((link) => (
                 <button
                   key={link.href}
                   onClick={() => scrollToSection(link.href)}
                   className="text-foreground-secondary hover:text-foreground transition-colors duration-300 text-sm font-medium animated-underline"
                 >
-                  {link.label}
+                  {t(link.labelKey)}
                 </button>
               ))}
+              <LanguageSwitcher />
               <ThemeToggle />
               <Link to="/admin">
                 <Button variant="outline" size="sm">
-                  Admin
+                  {t("nav.admin")}
                 </Button>
               </Link>
             </nav>
@@ -124,7 +128,7 @@ export function Navigation() {
                   onClick={() => scrollToSection(link.href)}
                   className="text-2xl font-display font-semibold text-foreground hover:text-primary transition-colors duration-300"
                 >
-                  {link.label}
+                  {t(link.labelKey)}
                 </motion.button>
               ))}
               <motion.div
@@ -133,10 +137,11 @@ export function Navigation() {
                 transition={{ delay: 0.3 }}
                 className="flex flex-col items-center gap-4"
               >
+                <LanguageSwitcher />
                 <ThemeToggle />
                 <Link to="/admin" onClick={() => setIsMobileMenuOpen(false)}>
                   <Button variant="outline" size="lg">
-                    Admin Panel
+                    {t("nav.admin")}
                   </Button>
                 </Link>
               </motion.div>

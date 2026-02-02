@@ -8,6 +8,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { useSocialLinks } from "@/hooks/useProfile";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
+import { useLanguage } from "@/contexts/LanguageContext";
 
 const socialIcons: Record<string, React.ElementType> = {
   instagram: Instagram,
@@ -26,13 +27,14 @@ export function Contact() {
   const { data: socialLinks } = useSocialLinks();
   const [copied, setCopied] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const { t } = useLanguage();
 
   const email = socialLinks?.find((link) => link.type === "email")?.url?.replace("mailto:", "") || "contact@asrull.dev";
 
   const copyEmail = async () => {
     await navigator.clipboard.writeText(email);
     setCopied(true);
-    toast.success("Email copied to clipboard!");
+    toast.success(t("contact.copied"));
     setTimeout(() => setCopied(false), 2000);
   };
 
@@ -51,10 +53,10 @@ export function Contact() {
       const { error } = await supabase.from("contact_messages").insert(data);
       if (error) throw error;
 
-      toast.success("Message sent successfully! I'll get back to you soon.");
+      toast.success(t("contact.success"));
       (e.target as HTMLFormElement).reset();
     } catch {
-      toast.error("Failed to send message. Please try again.");
+      toast.error(t("contact.error"));
     } finally {
       setIsSubmitting(false);
     }
@@ -78,7 +80,7 @@ export function Contact() {
               transition={{ duration: 0.5, delay: 0.1 }}
               className="inline-block text-primary text-xs sm:text-sm font-medium uppercase tracking-widest mb-3 sm:mb-4"
             >
-              Get in Touch
+              {t("contact.label")}
             </motion.span>
             <motion.h2
               initial={{ opacity: 0, y: 20 }}
@@ -86,7 +88,7 @@ export function Contact() {
               transition={{ duration: 0.5, delay: 0.2 }}
               className="font-display text-3xl sm:text-4xl md:text-5xl font-bold text-foreground mb-4 sm:mb-6"
             >
-              Let's Work Together
+              {t("contact.title")}
             </motion.h2>
             <motion.p
               initial={{ opacity: 0, y: 20 }}
@@ -94,7 +96,7 @@ export function Contact() {
               transition={{ duration: 0.5, delay: 0.3 }}
               className="text-base sm:text-lg text-foreground-secondary max-w-2xl mx-auto px-4"
             >
-              Have a project in mind? Let's discuss how we can bring your ideas to life.
+              {t("contact.subtitle")}
             </motion.p>
           </div>
 
@@ -107,7 +109,7 @@ export function Contact() {
               className="space-y-4 sm:space-y-6"
             >
               <h3 className="font-display text-xl sm:text-2xl font-semibold text-foreground mb-4 sm:mb-6">
-                Connect With Me
+                {t("contact.connect")}
               </h3>
 
               {/* Social Cards */}
@@ -149,12 +151,12 @@ export function Contact() {
                   {copied ? (
                     <>
                       <Check className="w-4 h-4" />
-                      Copied!
+                      {t("contact.copied")}
                     </>
                   ) : (
                     <>
                       <Copy className="w-4 h-4" />
-                      Copy Email Address
+                      {t("contact.copy_email")}
                     </>
                   )}
                 </Button>
@@ -170,41 +172,41 @@ export function Contact() {
               <form onSubmit={handleSubmit} className="space-y-4 sm:space-y-6">
                 <div>
                   <label htmlFor="name" className="block text-xs sm:text-sm font-medium text-foreground mb-1.5 sm:mb-2">
-                    Name
+                    {t("contact.name")}
                   </label>
                   <Input
                     id="name"
                     name="name"
                     required
-                    placeholder="Your name"
+                    placeholder={t("contact.name_placeholder")}
                     className="bg-card border-border focus:border-primary text-sm sm:text-base"
                   />
                 </div>
 
                 <div>
                   <label htmlFor="email" className="block text-xs sm:text-sm font-medium text-foreground mb-1.5 sm:mb-2">
-                    Email
+                    {t("contact.email")}
                   </label>
                   <Input
                     id="email"
                     name="email"
                     type="email"
                     required
-                    placeholder="your@email.com"
+                    placeholder={t("contact.email_placeholder")}
                     className="bg-card border-border focus:border-primary text-sm sm:text-base"
                   />
                 </div>
 
                 <div>
                   <label htmlFor="message" className="block text-xs sm:text-sm font-medium text-foreground mb-1.5 sm:mb-2">
-                    Message
+                    {t("contact.message")}
                   </label>
                   <Textarea
                     id="message"
                     name="message"
                     required
                     rows={4}
-                    placeholder="Tell me about your project..."
+                    placeholder={t("contact.message_placeholder")}
                     className="bg-card border-border focus:border-primary resize-none text-sm sm:text-base"
                   />
                 </div>
@@ -217,11 +219,11 @@ export function Contact() {
                   className="w-full text-sm sm:text-base"
                 >
                   {isSubmitting ? (
-                    "Sending..."
+                    t("contact.sending")
                   ) : (
                     <>
                       <Send className="w-4 h-4" />
-                      Send Message
+                      {t("contact.send")}
                     </>
                   )}
                 </Button>

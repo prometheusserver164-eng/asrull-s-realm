@@ -3,6 +3,7 @@ import { useState, useEffect } from "react";
 import { useTechStack } from "@/hooks/useProfile";
 import { cn } from "@/lib/utils";
 import { Loader2 } from "lucide-react";
+import { useLanguage } from "@/contexts/LanguageContext";
 
 // Auto-scaling icon component with user scale override
 function AutoScaleIcon({ 
@@ -84,6 +85,7 @@ function AutoScaleIcon({
 export function TechStack() {
   const { data, isLoading } = useTechStack();
   const [activeCategory, setActiveCategory] = useState<string | null>(null);
+  const { t } = useLanguage();
 
   if (isLoading) {
     return (
@@ -137,13 +139,13 @@ export function TechStack() {
             transition={{ duration: 0.5, delay: 0.1 }}
             className="inline-block px-4 py-1.5 rounded-full bg-primary/10 border border-primary/20 text-primary text-sm font-medium mb-6"
           >
-            Tech Stack
+            {t("tech.label")}
           </motion.span>
           <h2 className="text-3xl md:text-5xl font-bold mb-4">
-            <span className="gradient-text">Skills & Technologies</span>
+            <span className="gradient-text">{t("tech.title")}</span>
           </h2>
           <p className="text-foreground-secondary max-w-2xl mx-auto text-lg">
-            Tools and technologies I use to bring ideas to life
+            {t("tech.subtitle")}
           </p>
         </motion.div>
 
@@ -164,7 +166,7 @@ export function TechStack() {
                 : "bg-card border border-border text-foreground-secondary hover:border-primary/50 hover:text-foreground"
             )}
           >
-            All
+            {t("tech.all")}
           </button>
           {groupedItems.map((category) => (
             <button
@@ -267,13 +269,13 @@ export function TechStack() {
           className="mt-16 grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-6"
         >
           {[
-            { label: "Technologies", value: allItems.length },
-            { label: "Categories", value: categories.length },
-            { label: "Featured", value: allItems.filter((i) => i.is_featured).length },
-            { label: "Avg. Proficiency", value: `${Math.round(allItems.reduce((acc, i) => acc + i.proficiency, 0) / allItems.length || 0)}%` },
+            { labelKey: "tech.technologies", value: allItems.length },
+            { labelKey: "tech.categories", value: categories.length },
+            { labelKey: "tech.featured", value: allItems.filter((i) => i.is_featured).length },
+            { labelKey: "tech.avg_proficiency", value: `${Math.round(allItems.reduce((acc, i) => acc + i.proficiency, 0) / allItems.length || 0)}%` },
           ].map((stat, index) => (
             <motion.div
-              key={stat.label}
+              key={stat.labelKey}
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
@@ -283,7 +285,7 @@ export function TechStack() {
               <div className="text-2xl md:text-3xl font-bold gradient-text-accent mb-1">
                 {stat.value}
               </div>
-              <div className="text-xs md:text-sm text-foreground-muted">{stat.label}</div>
+              <div className="text-xs md:text-sm text-foreground-muted">{t(stat.labelKey)}</div>
             </motion.div>
           ))}
         </motion.div>

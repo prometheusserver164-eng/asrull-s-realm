@@ -1,6 +1,7 @@
 import { motion } from "framer-motion";
 import { useProfile, useSocialLinks } from "@/hooks/useProfile";
 import { Instagram, Mail, Github, Linkedin, Twitter, Youtube, Globe } from "lucide-react";
+import { useLanguage } from "@/contexts/LanguageContext";
 
 const socialIcons: Record<string, React.ElementType> = {
   instagram: Instagram,
@@ -16,6 +17,7 @@ const socialIcons: Record<string, React.ElementType> = {
 export function Footer() {
   const { data: profile } = useProfile();
   const { data: socialLinks } = useSocialLinks();
+  const { t } = useLanguage();
 
   return (
     <footer className="relative py-16 sm:py-20 lg:py-24 border-t border-border/30 overflow-hidden bg-gradient-to-b from-background to-background/95">
@@ -95,7 +97,7 @@ export function Footer() {
             transition={{ delay: 0.5 }}
             className="text-sm text-muted-foreground"
           >
-            Crafted by <span className="text-primary font-medium">Srull</span>
+            {t("footer.crafted_by")} <span className="text-primary font-medium">Srull</span>
           </motion.p>
 
           {/* Copyright */}
@@ -106,7 +108,7 @@ export function Footer() {
             transition={{ delay: 0.6 }}
             className="text-xs text-muted-foreground/70 text-center"
           >
-            © {new Date().getFullYear()} {profile?.name || "Mohammad Nasrulloh"}. All rights reserved.
+            © {new Date().getFullYear()} {profile?.name || "Mohammad Nasrulloh"}. {t("footer.rights")}
           </motion.p>
         </motion.div>
       </div>
