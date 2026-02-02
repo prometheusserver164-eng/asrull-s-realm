@@ -55,25 +55,16 @@ export function Footer() {
           className="flex flex-col items-center gap-8 pt-8"
         >
           {/* Logo */}
-          <motion.div
+          <motion.p
             initial={{ opacity: 0, scale: 0.9 }}
             whileInView={{ opacity: 1, scale: 1 }}
             viewport={{ once: true }}
             transition={{ delay: 0.1 }}
-            className="flex items-center gap-2"
+            className="font-display text-2xl sm:text-3xl font-bold text-foreground"
           >
-            <motion.span
-              animate={{ scale: [1, 1.15, 1] }}
-              transition={{ duration: 1.5, repeat: Infinity, repeatDelay: 0.5 }}
-              className="text-primary text-xl"
-            >
-              ❤️
-            </motion.span>
-            <span className="font-display text-2xl sm:text-3xl font-bold text-foreground">
-              {profile?.nickname || "Asrull"}
-              <span className="text-primary">.</span>
-            </span>
-          </motion.div>
+            {profile?.nickname || "Asrull"}
+            <span className="text-primary">.</span>
+          </motion.p>
 
           {/* Social Links */}
           <motion.div

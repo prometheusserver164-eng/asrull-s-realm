@@ -302,16 +302,24 @@ export function LoadingScreen({ onLoadingComplete, minDuration = 3200 }: Loading
   }, [minDuration, onLoadingComplete]);
   
   return (
-    <AnimatePresence>
+    <AnimatePresence mode="wait">
       {isVisible && (
         <motion.div
           initial={{ opacity: 1 }}
-          exit={{ opacity: 0, scale: 1.1 }}
-          transition={{ duration: 1, ease: "easeInOut" }}
+          exit={{ 
+            opacity: 0,
+            filter: "blur(10px)",
+            scale: 1.02,
+          }}
+          transition={{ duration: 0.8, ease: [0.4, 0, 0.2, 1] }}
           className="fixed inset-0 z-[100] bg-background flex flex-col items-center justify-center overflow-hidden"
         >
           {/* 3D Canvas */}
-          <div className="absolute inset-0">
+          <motion.div 
+            className="absolute inset-0"
+            exit={{ scale: 1.1, opacity: 0 }}
+            transition={{ duration: 0.6 }}
+          >
             <Canvas
               camera={{ position: [0, 0.2, 3.5], fov: 50 }}
               gl={{ antialias: true, alpha: true }}
@@ -320,49 +328,35 @@ export function LoadingScreen({ onLoadingComplete, minDuration = 3200 }: Loading
                 <Scene />
               </Suspense>
             </Canvas>
-          </div>
+          </motion.div>
           
           {/* Overlay Content */}
           <div className="relative z-10 flex flex-col items-center mt-[50vh]">
-            {/* Logo with heart icon */}
+            {/* Logo */}
             <motion.div
               initial={{ opacity: 0, scale: 0.8, y: 30 }}
               animate={{ opacity: 1, scale: 1, y: 0 }}
+              exit={{ opacity: 0, y: -20, scale: 0.95 }}
               transition={{ delay: 0.5, duration: 0.8, type: "spring", stiffness: 100 }}
-              className="mb-6 sm:mb-8 flex items-center gap-2"
+              className="mb-6 sm:mb-8"
             >
-              <motion.span
-                animate={{ 
-                  scale: [1, 1.15, 1],
-                }}
-                transition={{ 
-                  duration: 0.8, 
-                  repeat: Infinity,
-                  repeatDelay: 0.2,
-                }}
-                className="text-rose-500 text-2xl sm:text-3xl"
-              >
-                ❤️
-              </motion.span>
               <h1 className="font-display text-2xl sm:text-3xl md:text-4xl font-bold text-foreground">
-                Asrull<span className="text-rose-500">.</span>
+                Asrull<span className="text-primary">.</span>
               </h1>
             </motion.div>
             
-            {/* Loading Bar with glow effect */}
+            {/* Loading Bar */}
             <motion.div
               initial={{ opacity: 0, width: 0 }}
               animate={{ opacity: 1, width: "auto" }}
+              exit={{ opacity: 0, scale: 0.9 }}
               transition={{ delay: 0.8, duration: 0.6 }}
               className="relative"
             >
-              <div className="w-40 sm:w-48 md:w-56 h-1 sm:h-1.5 bg-rose-500/10 rounded-full overflow-hidden backdrop-blur-sm border border-rose-500/20">
+              <div className="w-40 sm:w-48 md:w-56 h-1 sm:h-1.5 bg-primary/10 rounded-full overflow-hidden backdrop-blur-sm border border-primary/20">
                 <motion.div
-                  className="h-full rounded-full relative overflow-hidden"
-                  style={{ 
-                    width: `${progress}%`,
-                    background: "linear-gradient(90deg, #fb7185, #f43f5e, #e11d48)"
-                  }}
+                  className="h-full rounded-full relative overflow-hidden bg-gradient-to-r from-primary via-primary to-primary/80"
+                  style={{ width: `${progress}%` }}
                   transition={{ duration: 0.1 }}
                 >
                   {/* Shimmer effect */}
@@ -376,7 +370,7 @@ export function LoadingScreen({ onLoadingComplete, minDuration = 3200 }: Loading
               
               {/* Glow under bar */}
               <div 
-                className="absolute -bottom-2 left-0 h-4 rounded-full blur-md bg-rose-500/30"
+                className="absolute -bottom-2 left-0 h-4 rounded-full blur-md bg-primary/30"
                 style={{ width: `${progress}%` }}
               />
               
@@ -384,39 +378,30 @@ export function LoadingScreen({ onLoadingComplete, minDuration = 3200 }: Loading
               <motion.p
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
+                exit={{ opacity: 0 }}
                 transition={{ delay: 1 }}
-                className="text-center mt-4 sm:mt-5 text-xs sm:text-sm text-foreground-secondary font-medium tabular-nums"
+                className="text-center mt-4 sm:mt-5 text-xs sm:text-sm text-muted-foreground font-medium tabular-nums"
               >
                 {Math.round(progress)}%
               </motion.p>
             </motion.div>
             
-            {/* Loading Text with typing effect */}
-            <motion.div
+            {/* Loading Text */}
+            <motion.p
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
               transition={{ delay: 1.2 }}
-              className="mt-4 sm:mt-6 flex items-center gap-1.5"
+              className="mt-4 sm:mt-6 text-muted-foreground/70 text-xs sm:text-sm tracking-wide"
             >
-              <motion.span
-                className="text-foreground-muted text-xs sm:text-sm tracking-wide"
-              >
-                Loading with
-              </motion.span>
-              <motion.span
-                animate={{ scale: [1, 1.2, 1] }}
-                transition={{ duration: 0.6, repeat: Infinity }}
-                className="text-rose-500"
-              >
-                ♥
-              </motion.span>
-            </motion.div>
+              Loading experience...
+            </motion.p>
           </div>
           
           {/* Gradient Overlays */}
-          <div className="absolute inset-0 bg-gradient-radial from-rose-500/5 via-transparent to-background/80 pointer-events-none" />
-          <div className="absolute bottom-0 left-0 right-0 h-28 sm:h-36 bg-gradient-to-t from-background via-background/90 to-transparent pointer-events-none" />
-          <div className="absolute top-0 left-0 right-0 h-20 sm:h-28 bg-gradient-to-b from-background/60 to-transparent pointer-events-none" />
+          <div className="absolute inset-0 bg-gradient-radial from-primary/5 via-transparent to-background/80 pointer-events-none" />
+          <div className="absolute bottom-0 left-0 right-0 h-32 sm:h-40 bg-gradient-to-t from-background via-background/95 to-transparent pointer-events-none" />
+          <div className="absolute top-0 left-0 right-0 h-24 sm:h-32 bg-gradient-to-b from-background/70 to-transparent pointer-events-none" />
         </motion.div>
       )}
     </AnimatePresence>
