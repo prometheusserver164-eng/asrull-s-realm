@@ -35,17 +35,32 @@ export default function Index() {
     }
   }, [profile]);
 
-  // Log page view analytics
+  // Log page view analytics with security monitoring
   useEffect(() => {
     const logPageView = async () => {
       try {
-        await supabase.from("analytics").insert({
-          page: "/",
-          referrer: document.referrer || null,
-          user_agent: navigator.userAgent,
+        // Generate session ID for tracking
+        let sessionId = sessionStorage.getItem("session_id");
+        if (!sessionId) {
+          sessionId = crypto.randomUUID();
+          sessionStorage.setItem("session_id", sessionId);
+        }
+
+        // Hash IP for privacy (using a simple approach)
+        const ipHash = btoa(navigator.userAgent + screen.width + screen.height).substring(0, 16);
+
+        // Call security monitor edge function
+        await supabase.functions.invoke("security-monitor", {
+          body: {
+            page: "/",
+            referrer: document.referrer || null,
+            user_agent: navigator.userAgent,
+            ip_hash: ipHash,
+            session_id: sessionId,
+          },
         });
       } catch {
-        // Silent fail for analytics
+        // Silent fail for analytics/security
       }
     };
     logPageView();
