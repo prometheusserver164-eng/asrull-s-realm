@@ -97,10 +97,10 @@ export function TechStack() {
           ))}
         </motion.div>
 
-        {/* Tech Grid - Modern Typography Cards */}
+        {/* Tech Grid */}
         <motion.div
           layout
-          className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4"
+          className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-4"
         >
           {displayItems.map((item, index) => (
             <motion.div
@@ -111,13 +111,13 @@ export function TechStack() {
               exit={{ opacity: 0, scale: 0.9 }}
               transition={{
                 duration: 0.4,
-                delay: index * 0.05,
+                delay: index * 0.03,
                 layout: { duration: 0.3 },
               }}
-              whileHover={{ y: -4, scale: 1.02 }}
+              whileHover={{ y: -6, scale: 1.02 }}
               className="group"
             >
-              <div className="relative h-full p-5 rounded-2xl bg-card border border-border transition-all duration-300 group-hover:border-primary/50 group-hover:shadow-lg group-hover:shadow-primary/10 overflow-hidden">
+              <div className="relative h-full p-4 rounded-2xl bg-card border border-border transition-all duration-300 group-hover:border-primary/50 group-hover:shadow-xl group-hover:shadow-primary/10 overflow-hidden">
                 {/* Gradient overlay on hover */}
                 <div className="absolute inset-0 bg-gradient-to-br from-primary/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
                 
@@ -126,28 +126,39 @@ export function TechStack() {
                   <motion.div
                     initial={{ width: 0 }}
                     animate={isInView ? { width: `${item.proficiency}%` } : {}}
-                    transition={{ duration: 0.8, delay: index * 0.05 + 0.3 }}
-                    className="h-full bg-gradient-to-r from-primary to-primary-glow"
+                    transition={{ duration: 0.8, delay: index * 0.03 + 0.3 }}
+                    className="h-full bg-gradient-to-r from-primary to-accent"
                   />
                 </div>
 
                 {/* Content */}
-                <div className="relative z-10 flex flex-col items-center text-center space-y-2">
-                  {/* Tech Name with stylized first letter */}
-                  <div className="flex items-center justify-center">
-                    <span className="text-2xl font-bold gradient-text-accent leading-none">
-                      {item.name.charAt(0)}
-                    </span>
+                <div className="relative z-10 flex flex-col items-center text-center space-y-3">
+                  {/* Tech Logo */}
+                  <div className="w-12 h-12 flex items-center justify-center rounded-xl bg-background/50 border border-border/50 group-hover:border-primary/30 transition-colors duration-300 overflow-hidden">
+                    {item.custom_icon_url ? (
+                      <img
+                        src={item.custom_icon_url}
+                        alt={item.name}
+                        className="w-8 h-8 object-contain"
+                        loading="lazy"
+                      />
+                    ) : (
+                      <span className="text-xl font-bold gradient-text-accent">
+                        {item.name.charAt(0)}
+                      </span>
+                    )}
                   </div>
                   
-                  <h3 className="text-sm font-semibold text-foreground group-hover:text-primary transition-colors duration-300">
-                    {item.name}
-                  </h3>
-                  
-                  {/* Proficiency percentage */}
-                  <span className="text-xs text-foreground-muted">
-                    {item.proficiency}%
-                  </span>
+                  <div className="space-y-1">
+                    <h3 className="text-sm font-semibold text-foreground group-hover:text-primary transition-colors duration-300 line-clamp-1">
+                      {item.name}
+                    </h3>
+                    
+                    {/* Proficiency percentage */}
+                    <span className="text-xs text-foreground-muted">
+                      {item.proficiency}%
+                    </span>
+                  </div>
                 </div>
 
                 {/* Featured badge */}
@@ -166,25 +177,25 @@ export function TechStack() {
           initial={{ opacity: 0, y: 30 }}
           animate={isInView ? { opacity: 1, y: 0 } : {}}
           transition={{ duration: 0.6, delay: 0.5 }}
-          className="mt-16 grid grid-cols-2 md:grid-cols-4 gap-6"
+          className="mt-16 grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-6"
         >
           {[
             { label: "Technologies", value: allItems.length },
             { label: "Categories", value: categories.length },
             { label: "Featured", value: allItems.filter((i) => i.is_featured).length },
-            { label: "Avg. Proficiency", value: `${Math.round(allItems.reduce((acc, i) => acc + i.proficiency, 0) / allItems.length)}%` },
+            { label: "Avg. Proficiency", value: `${Math.round(allItems.reduce((acc, i) => acc + i.proficiency, 0) / allItems.length || 0)}%` },
           ].map((stat, index) => (
             <motion.div
               key={stat.label}
               initial={{ opacity: 0, y: 20 }}
               animate={isInView ? { opacity: 1, y: 0 } : {}}
               transition={{ duration: 0.5, delay: 0.6 + index * 0.1 }}
-              className="text-center p-6 rounded-2xl bg-card/50 border border-border/50"
+              className="text-center p-5 rounded-2xl bg-card/50 border border-border/50 backdrop-blur-sm"
             >
-              <div className="text-3xl font-bold gradient-text-accent mb-1">
+              <div className="text-2xl md:text-3xl font-bold gradient-text-accent mb-1">
                 {stat.value}
               </div>
-              <div className="text-sm text-foreground-muted">{stat.label}</div>
+              <div className="text-xs md:text-sm text-foreground-muted">{stat.label}</div>
             </motion.div>
           ))}
         </motion.div>
