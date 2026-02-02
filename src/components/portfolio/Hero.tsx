@@ -80,22 +80,7 @@ export function Hero() {
     <section ref={containerRef} className="relative min-h-screen flex items-center justify-center overflow-hidden">
       {/* Background Effects */}
       <div className="hero-gradient" />
-      <div className="noise-overlay" />
       <FloatingParticles />
-      
-      {/* Animated Grid */}
-      <motion.div
-        style={{ opacity }}
-        className="absolute inset-0 opacity-[0.03]"
-      >
-        <div className="absolute inset-0" style={{
-          backgroundImage: `
-            linear-gradient(to right, hsl(var(--foreground)) 1px, transparent 1px),
-            linear-gradient(to bottom, hsl(var(--foreground)) 1px, transparent 1px)
-          `,
-          backgroundSize: '80px 80px'
-        }} />
-      </motion.div>
 
       {/* Glowing Orbs */}
       <motion.div
@@ -115,7 +100,7 @@ export function Hero() {
         className="absolute bottom-1/4 -right-32 w-80 h-80 rounded-full bg-accent/20 blur-3xl"
       />
 
-      <motion.div style={{ y }} className="section-container relative z-10 py-20">
+      <motion.div style={{ y }} className="section-container relative z-10 py-16 sm:py-20 px-4">
         <div className="max-w-4xl mx-auto text-center">
           {/* Location Badge */}
           <motion.div
@@ -123,31 +108,31 @@ export function Hero() {
             initial="hidden"
             animate="visible"
             variants={textVariants}
-            className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-card/60 backdrop-blur-sm border border-border/50 mb-8"
+            className="inline-flex items-center gap-2 px-3 sm:px-4 py-1.5 sm:py-2 rounded-full bg-card/60 backdrop-blur-sm border border-border/50 mb-6 sm:mb-8"
           >
             <motion.div
               animate={{ scale: [1, 1.2, 1] }}
               transition={{ duration: 2, repeat: Infinity }}
             >
-              <MapPin className="w-4 h-4 text-primary" />
+              <MapPin className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-primary" />
             </motion.div>
-            <span className="text-sm text-foreground-secondary">
+            <span className="text-xs sm:text-sm text-foreground-secondary">
               {profile?.location || "Indonesia"}
             </span>
           </motion.div>
 
           {/* Name with Animated Reveal */}
-          <div className="mb-4">
+          <div className="mb-3 sm:mb-4">
             <motion.span
               custom={1}
               initial="hidden"
               animate="visible"
               variants={textVariants}
-              className="block text-lg md:text-xl text-foreground-secondary font-medium mb-2"
+              className="block text-base sm:text-lg md:text-xl text-foreground-secondary font-medium mb-1 sm:mb-2"
             >
               Hello, I'm
             </motion.span>
-            <h1 className="font-display text-5xl md:text-7xl lg:text-8xl font-bold tracking-tight">
+            <h1 className="font-display text-4xl sm:text-5xl md:text-6xl lg:text-7xl xl:text-8xl font-bold tracking-tight">
               <motion.span
                 custom={2}
                 initial="hidden"
@@ -169,7 +154,7 @@ export function Hero() {
                   initial={{ scaleX: 0 }}
                   animate={{ scaleX: 1 }}
                   transition={{ duration: 1, delay: 1.2, ease: "easeOut" }}
-                  className="absolute -bottom-2 left-1/4 w-1/2 h-1 bg-gradient-to-r from-primary to-accent origin-left rounded-full"
+                  className="absolute -bottom-1 sm:-bottom-2 left-1/4 w-1/2 h-0.5 sm:h-1 bg-gradient-to-r from-primary to-accent origin-left rounded-full"
                 />
               </motion.span>
             </h1>
@@ -181,7 +166,7 @@ export function Hero() {
             initial="hidden"
             animate="visible"
             variants={textVariants}
-            className="text-xl md:text-2xl text-foreground-secondary font-light mb-6"
+            className="text-lg sm:text-xl md:text-2xl text-foreground-secondary font-light mb-4 sm:mb-6"
           >
             {profile?.title || "Full-Stack Developer"}
           </motion.p>
@@ -192,10 +177,10 @@ export function Hero() {
             initial="hidden"
             animate="visible"
             variants={textVariants}
-            className="inline-flex items-center gap-2 px-4 py-2 rounded-lg bg-primary/10 border border-primary/20 mb-12"
+            className="inline-flex items-center gap-1.5 sm:gap-2 px-3 sm:px-4 py-1.5 sm:py-2 rounded-lg bg-primary/10 border border-primary/20 mb-8 sm:mb-12"
           >
-            <Sparkles className="w-4 h-4 text-primary" />
-            <span className="text-sm text-primary font-medium">
+            <Sparkles className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-primary" />
+            <span className="text-xs sm:text-sm text-primary font-medium">
               {profile?.education || "Computer Science Student"}
             </span>
           </motion.div>
@@ -206,14 +191,14 @@ export function Hero() {
             initial="hidden"
             animate="visible"
             variants={textVariants}
-            className="flex flex-col sm:flex-row items-center justify-center gap-4"
+            className="flex flex-col sm:flex-row items-center justify-center gap-3 sm:gap-4"
           >
             <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
               <Button
                 variant="hero"
                 size="lg"
                 onClick={scrollToProjects}
-                className="min-w-[180px]"
+                className="min-w-[160px] sm:min-w-[180px] text-sm sm:text-base"
               >
                 View Projects
               </Button>
@@ -223,7 +208,7 @@ export function Hero() {
                 variant="hero-outline"
                 size="lg"
                 onClick={scrollToContact}
-                className="min-w-[180px]"
+                className="min-w-[160px] sm:min-w-[180px] text-sm sm:text-base"
               >
                 Contact Me
               </Button>
@@ -236,20 +221,20 @@ export function Hero() {
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ duration: 0.6, delay: 1.5 }}
-          className="absolute bottom-10 left-1/2 -translate-x-1/2"
+          className="absolute bottom-6 sm:bottom-10 left-1/2 -translate-x-1/2"
         >
           <motion.div
             animate={{ y: [0, 10, 0] }}
             transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
-            className="flex flex-col items-center gap-2 text-foreground-muted cursor-pointer"
+            className="flex flex-col items-center gap-1.5 sm:gap-2 text-foreground-muted cursor-pointer"
             onClick={() => document.getElementById("about")?.scrollIntoView({ behavior: "smooth" })}
           >
-            <span className="text-xs uppercase tracking-widest">Scroll</span>
+            <span className="text-[10px] sm:text-xs uppercase tracking-widest">Scroll</span>
             <motion.div
               animate={{ opacity: [0.5, 1, 0.5] }}
               transition={{ duration: 2, repeat: Infinity }}
             >
-              <ArrowDown className="w-4 h-4" />
+              <ArrowDown className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
             </motion.div>
           </motion.div>
         </motion.div>

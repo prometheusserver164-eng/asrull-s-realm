@@ -51,10 +51,7 @@ export default function Index() {
   }, []);
 
   return (
-    <div className="relative min-h-screen bg-background text-foreground">
-      {/* Noise Texture Overlay */}
-      <div className="noise-overlay" />
-      
+    <div className="relative min-h-screen bg-background text-foreground overflow-x-hidden">
       {/* Navigation */}
       <Navigation />
 
