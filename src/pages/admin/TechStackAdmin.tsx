@@ -6,10 +6,12 @@ import { Input } from "@/components/ui/input";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Switch } from "@/components/ui/switch";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { TechIconPicker } from "@/components/TechIconPicker";
+import { ImageDropzone } from "@/components/ImageDropzone";
 
 interface TechCategory {
   id: string;
@@ -22,6 +24,7 @@ interface TechItem {
   name: string;
   category_id: string | null;
   icon_name: string | null;
+  custom_icon_url: string | null;
   proficiency: number;
   is_featured: boolean;
   sort_order: number;
@@ -31,6 +34,7 @@ const emptyItem: Partial<TechItem> = {
   name: "",
   category_id: null,
   icon_name: "",
+  custom_icon_url: null,
   proficiency: 80,
   is_featured: false,
   sort_order: 0,
@@ -233,7 +237,11 @@ export default function TechStackAdmin() {
                 className="card-elevated p-4 flex items-center justify-between"
               >
                 <div className="flex items-center gap-3">
-                  <TechIconPreview name={item.icon_name || ""} />
+                  {item.custom_icon_url ? (
+                    <img src={item.custom_icon_url} alt={item.name} className="w-8 h-8 rounded object-contain" />
+                  ) : (
+                    <TechIconPreview name={item.icon_name || ""} />
+                  )}
                   <div>
                     <p className="font-medium text-foreground">{item.name}</p>
                     <div className="flex items-center gap-2">
@@ -330,12 +338,33 @@ export default function TechStackAdmin() {
               <label className="block text-sm font-medium text-foreground mb-2">
                 Icon
               </label>
-              <TechIconPicker
-                value={editingItem?.icon_name || ""}
-                onChange={(value) =>
-                  setEditingItem((prev) => ({ ...prev, icon_name: value }))
-                }
-              />
+              <Tabs defaultValue={editingItem?.custom_icon_url ? "upload" : "preset"} className="w-full">
+                <TabsList className="grid w-full grid-cols-2 mb-4">
+                  <TabsTrigger value="preset">Preset Icons</TabsTrigger>
+                  <TabsTrigger value="upload">Upload Custom</TabsTrigger>
+                </TabsList>
+                <TabsContent value="preset">
+                  <TechIconPicker
+                    value={editingItem?.icon_name || ""}
+                    onChange={(value) =>
+                      setEditingItem((prev) => ({ ...prev, icon_name: value, custom_icon_url: null }))
+                    }
+                  />
+                </TabsContent>
+                <TabsContent value="upload">
+                  <ImageDropzone
+                    value={editingItem?.custom_icon_url || undefined}
+                    onChange={(url) =>
+                      setEditingItem((prev) => ({ ...prev, custom_icon_url: url, icon_name: null }))
+                    }
+                    bucket="tech-icons"
+                    folder="logos"
+                  />
+                  <p className="text-xs text-foreground-muted mt-2">
+                    Drag & drop your custom logo (max 5MB)
+                  </p>
+                </TabsContent>
+              </Tabs>
             </div>
 
             <div>

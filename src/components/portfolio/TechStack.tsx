@@ -266,7 +266,11 @@ export function TechStack() {
 
                 {/* Icon */}
                 <div className="w-12 h-12 mb-4 group-hover:scale-110 transition-transform duration-300">
-                  <TechIcon name={item.icon_name || item.name} className="w-full h-full" />
+                  {item.custom_icon_url ? (
+                    <img src={item.custom_icon_url} alt={item.name} className="w-full h-full object-contain" />
+                  ) : (
+                    <TechIcon name={item.icon_name || item.name} className="w-full h-full" />
+                  )}
                 </div>
 
                 {/* Name */}
