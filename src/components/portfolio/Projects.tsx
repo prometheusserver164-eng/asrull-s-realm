@@ -1,10 +1,12 @@
 import { motion, AnimatePresence } from "framer-motion";
 import { useInView } from "framer-motion";
-import { useRef, useState } from "react";
-import { ExternalLink, Github, Play, Sparkles, ArrowUpRight } from "lucide-react";
+import { useRef, useState, useEffect } from "react";
+import { ExternalLink, Github, Play, Sparkles, ArrowUpRight, Globe, ImageIcon, ChevronLeft, ChevronRight } from "lucide-react";
 import { useProjects, Project } from "@/hooks/useProfile";
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog";
+import { cn } from "@/lib/utils";
+import { Skeleton } from "@/components/ui/skeleton";
 
 const containerVariants = {
   hidden: { opacity: 0 },
@@ -53,30 +55,9 @@ function ProjectCard({ project, index, isInView }: { project: Project; index: nu
           }}
         />
 
-        {/* Image */}
+        {/* Media Carousel - Website Preview / Image / Video */}
         <div className="relative aspect-video overflow-hidden bg-background-elevated">
-          {project.image_url ? (
-            <motion.img
-              src={project.image_url}
-              alt={project.title}
-              className="w-full h-full object-cover"
-              animate={{ scale: isHovered ? 1.1 : 1 }}
-              transition={{ duration: 0.6, ease: "easeOut" }}
-            />
-          ) : (
-            <div className="w-full h-full flex items-center justify-center">
-              <motion.div
-                animate={{ 
-                  rotate: isHovered ? [0, 10, -10, 0] : 0,
-                  scale: isHovered ? 1.2 : 1 
-                }}
-                transition={{ duration: 0.5 }}
-                className="text-6xl opacity-20"
-              >
-                🚀
-              </motion.div>
-            </div>
-          )}
+          <ProjectMediaCarousel project={project} isHovered={isHovered} />
 
           {/* Overlay */}
           <motion.div
@@ -263,6 +244,269 @@ function ProjectCard({ project, index, isInView }: { project: Project; index: nu
         )}
       </AnimatePresence>
     </>
+  );
+}
+
+// Website Preview Component with iframe
+function WebsitePreview({ 
+  url, 
+  fallbackImage,
+  title 
+}: { 
+  url: string; 
+  fallbackImage?: string | null;
+  title: string;
+}) {
+  const [isLoading, setIsLoading] = useState(true);
+  const [hasError, setHasError] = useState(false);
+  const [showIframe, setShowIframe] = useState(true);
+
+  // Reset states when URL changes
+  useEffect(() => {
+    setIsLoading(true);
+    setHasError(false);
+    setShowIframe(true);
+  }, [url]);
+
+  const handleIframeLoad = () => {
+    setIsLoading(false);
+  };
+
+  const handleIframeError = () => {
+    setHasError(true);
+    setIsLoading(false);
+  };
+
+  // If iframe fails or no URL, show fallback image
+  if (hasError || !showIframe) {
+    return fallbackImage ? (
+      <img
+        src={fallbackImage}
+        alt={title}
+        className="w-full h-full object-cover"
+      />
+    ) : (
+      <div className="w-full h-full flex flex-col items-center justify-center gap-2 text-foreground-muted">
+        <Globe className="w-12 h-12 opacity-30" />
+        <span className="text-sm">Preview not available</span>
+      </div>
+    );
+  }
+
+  return (
+    <div className="relative w-full h-full">
+      {/* Loading skeleton */}
+      {isLoading && (
+        <div className="absolute inset-0 flex items-center justify-center bg-background-elevated">
+          <div className="flex flex-col items-center gap-3">
+            <div className="relative">
+              <Globe className="w-8 h-8 text-primary animate-pulse" />
+            </div>
+            <span className="text-sm text-foreground-muted">Loading preview...</span>
+          </div>
+        </div>
+      )}
+      
+      {/* Iframe wrapper with scaling for preview */}
+      <div className="w-full h-full overflow-hidden">
+        <iframe
+          src={url}
+          title={`Preview of ${title}`}
+          className={cn(
+            "w-[200%] h-[200%] origin-top-left scale-50 border-0",
+            isLoading ? "opacity-0" : "opacity-100 transition-opacity duration-500"
+          )}
+          onLoad={handleIframeLoad}
+          onError={handleIframeError}
+          sandbox="allow-scripts allow-same-origin"
+          loading="lazy"
+        />
+      </div>
+
+      {/* Overlay gradient for better readability */}
+      <div className="absolute inset-0 pointer-events-none bg-gradient-to-t from-card/20 to-transparent" />
+      
+      {/* Live indicator */}
+      <div className="absolute top-2 left-2 flex items-center gap-1.5 px-2 py-1 rounded-full bg-background/80 backdrop-blur-sm border border-border/50">
+        <span className="w-2 h-2 rounded-full bg-green-500 animate-pulse" />
+        <span className="text-xs font-medium text-foreground">Live</span>
+      </div>
+
+      {/* Fallback button if iframe doesn't work well */}
+      <button
+        onClick={() => setShowIframe(false)}
+        className="absolute bottom-2 right-2 flex items-center gap-1 px-2 py-1 rounded-full bg-background/80 backdrop-blur-sm border border-border/50 text-xs text-foreground-muted hover:text-foreground transition-colors"
+      >
+        <ImageIcon className="w-3 h-3" />
+        Show image
+      </button>
+    </div>
+  );
+}
+
+// Carousel for project media (Website Preview / Images / Video)
+function ProjectMediaCarousel({
+  project,
+  isHovered
+}: {
+  project: Project;
+  isHovered: boolean;
+}) {
+  const [currentSlide, setCurrentSlide] = useState(0);
+  const hasLiveUrl = !!project.live_url;
+  const hasImage = !!project.image_url;
+  const hasVideo = !!project.video_url;
+  
+  // Build slides array
+  const slides: Array<{ type: 'website' | 'image' | 'video'; content: string }> = [];
+  
+  if (hasLiveUrl) {
+    slides.push({ type: 'website', content: project.live_url! });
+  }
+  if (hasImage) {
+    slides.push({ type: 'image', content: project.image_url! });
+  }
+  if (hasVideo) {
+    slides.push({ type: 'video', content: project.video_url! });
+  }
+
+  // If no slides, show placeholder
+  if (slides.length === 0) {
+    return (
+      <div className="w-full h-full flex items-center justify-center">
+        <motion.div
+          animate={{ 
+            rotate: isHovered ? [0, 10, -10, 0] : 0,
+            scale: isHovered ? 1.2 : 1 
+          }}
+          transition={{ duration: 0.5 }}
+          className="text-6xl opacity-20"
+        >
+          🚀
+        </motion.div>
+      </div>
+    );
+  }
+
+  const nextSlide = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    setCurrentSlide((prev) => (prev + 1) % slides.length);
+  };
+
+  const prevSlide = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    setCurrentSlide((prev) => (prev - 1 + slides.length) % slides.length);
+  };
+
+  const currentMedia = slides[currentSlide];
+
+  return (
+    <div className="relative w-full h-full">
+      <AnimatePresence mode="wait">
+        <motion.div
+          key={currentSlide}
+          initial={{ opacity: 0, x: 20 }}
+          animate={{ opacity: 1, x: 0 }}
+          exit={{ opacity: 0, x: -20 }}
+          transition={{ duration: 0.3 }}
+          className="w-full h-full"
+        >
+          {currentMedia.type === 'website' && (
+            <WebsitePreview
+              url={currentMedia.content}
+              fallbackImage={project.image_url}
+              title={project.title}
+            />
+          )}
+          {currentMedia.type === 'image' && (
+            <motion.img
+              src={currentMedia.content}
+              alt={project.title}
+              className="w-full h-full object-cover"
+              animate={{ scale: isHovered ? 1.05 : 1 }}
+              transition={{ duration: 0.6, ease: "easeOut" }}
+            />
+          )}
+          {currentMedia.type === 'video' && (
+            <video
+              src={currentMedia.content}
+              className="w-full h-full object-cover"
+              muted
+              loop
+              autoPlay={isHovered}
+            />
+          )}
+        </motion.div>
+      </AnimatePresence>
+
+      {/* Navigation arrows - only show if multiple slides */}
+      {slides.length > 1 && (
+        <>
+          <motion.button
+            initial={{ opacity: 0 }}
+            animate={{ opacity: isHovered ? 1 : 0 }}
+            onClick={prevSlide}
+            className="absolute left-2 top-1/2 -translate-y-1/2 w-8 h-8 rounded-full bg-background/80 backdrop-blur-sm border border-border/50 flex items-center justify-center text-foreground hover:bg-background transition-colors z-10"
+          >
+            <ChevronLeft className="w-4 h-4" />
+          </motion.button>
+          <motion.button
+            initial={{ opacity: 0 }}
+            animate={{ opacity: isHovered ? 1 : 0 }}
+            onClick={nextSlide}
+            className="absolute right-2 top-1/2 -translate-y-1/2 w-8 h-8 rounded-full bg-background/80 backdrop-blur-sm border border-border/50 flex items-center justify-center text-foreground hover:bg-background transition-colors z-10"
+          >
+            <ChevronRight className="w-4 h-4" />
+          </motion.button>
+
+          {/* Slide indicators */}
+          <div className="absolute bottom-2 left-1/2 -translate-x-1/2 flex gap-1.5 z-10">
+            {slides.map((slide, index) => (
+              <button
+                key={index}
+                onClick={(e) => {
+                  e.stopPropagation();
+                  setCurrentSlide(index);
+                }}
+                className={cn(
+                  "w-2 h-2 rounded-full transition-all duration-300",
+                  currentSlide === index 
+                    ? "bg-primary w-4" 
+                    : "bg-foreground/30 hover:bg-foreground/50"
+                )}
+              />
+            ))}
+          </div>
+
+          {/* Slide type indicators */}
+          <motion.div 
+            initial={{ opacity: 0 }}
+            animate={{ opacity: isHovered ? 1 : 0 }}
+            className="absolute top-2 right-2 flex gap-1 z-10"
+          >
+            {slides.map((slide, index) => (
+              <button
+                key={index}
+                onClick={(e) => {
+                  e.stopPropagation();
+                  setCurrentSlide(index);
+                }}
+                className={cn(
+                  "flex items-center gap-1 px-2 py-1 rounded-full text-xs font-medium transition-all",
+                  currentSlide === index
+                    ? "bg-primary text-primary-foreground"
+                    : "bg-background/60 backdrop-blur-sm text-foreground-muted hover:text-foreground"
+                )}
+              >
+                {slide.type === 'website' && <Globe className="w-3 h-3" />}
+                {slide.type === 'image' && <ImageIcon className="w-3 h-3" />}
+                {slide.type === 'video' && <Play className="w-3 h-3" />}
+              </button>
+            ))}
+          </motion.div>
+        </>
+      )}
+    </div>
   );
 }
 
