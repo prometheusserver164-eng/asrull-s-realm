@@ -1,8 +1,94 @@
 import { motion } from "framer-motion";
-import { useState } from "react";
+import { useState, useEffect, useRef } from "react";
 import { useTechStack } from "@/hooks/useProfile";
 import { cn } from "@/lib/utils";
 import { Loader2 } from "lucide-react";
+
+// Auto-scaling icon component
+function AutoScaleIcon({ 
+  src, 
+  alt, 
+  containerSize = 56,
+  maxIconSize = 36,
+  minIconSize = 24
+}: { 
+  src: string; 
+  alt: string;
+  containerSize?: number;
+  maxIconSize?: number;
+  minIconSize?: number;
+}) {
+  const [dimensions, setDimensions] = useState({ width: maxIconSize, height: maxIconSize });
+  const [loaded, setLoaded] = useState(false);
+
+  useEffect(() => {
+    const img = new Image();
+    img.onload = () => {
+      const { naturalWidth, naturalHeight } = img;
+      
+      // Calculate aspect ratio
+      const aspectRatio = naturalWidth / naturalHeight;
+      
+      let width: number;
+      let height: number;
+      
+      if (aspectRatio >= 1) {
+        // Landscape or square - fit to width
+        width = Math.min(maxIconSize, Math.max(minIconSize, naturalWidth));
+        height = width / aspectRatio;
+        
+        // If height is too small, adjust
+        if (height < minIconSize) {
+          height = minIconSize;
+          width = height * aspectRatio;
+        }
+      } else {
+        // Portrait - fit to height
+        height = Math.min(maxIconSize, Math.max(minIconSize, naturalHeight));
+        width = height * aspectRatio;
+        
+        // If width is too small, adjust
+        if (width < minIconSize) {
+          width = minIconSize;
+          height = width / aspectRatio;
+        }
+      }
+      
+      // Cap at max size
+      if (width > maxIconSize) {
+        width = maxIconSize;
+        height = width / aspectRatio;
+      }
+      if (height > maxIconSize) {
+        height = maxIconSize;
+        width = height * aspectRatio;
+      }
+      
+      setDimensions({ width, height });
+      setLoaded(true);
+    };
+    img.onerror = () => {
+      setDimensions({ width: maxIconSize, height: maxIconSize });
+      setLoaded(true);
+    };
+    img.src = src;
+  }, [src, maxIconSize, minIconSize]);
+
+  return (
+    <img
+      src={src}
+      alt={alt}
+      style={{
+        width: `${dimensions.width}px`,
+        height: `${dimensions.height}px`,
+        opacity: loaded ? 1 : 0,
+        transition: 'opacity 0.2s ease-in-out',
+      }}
+      className="object-contain"
+      loading="lazy"
+    />
+  );
+}
 
 export function TechStack() {
   const { data, isLoading } = useTechStack();
@@ -142,23 +228,19 @@ export function TechStack() {
 
                 {/* Content */}
                 <div className="relative z-10 flex flex-col items-center text-center space-y-3">
-                  {/* Tech Logo */}
+                  {/* Tech Logo - Auto-scaled */}
                   <div className="w-14 h-14 flex items-center justify-center rounded-xl bg-background/50 border border-border/50 group-hover:border-primary/30 transition-colors duration-300 overflow-hidden">
                     {item.custom_icon_url ? (
-                      <img
+                      <AutoScaleIcon
                         src={item.custom_icon_url}
                         alt={item.name}
-                        style={{
-                          width: `${(item.icon_scale || 100) * 0.36}px`,
-                          height: `${(item.icon_scale || 100) * 0.36}px`,
-                        }}
-                        className="object-contain"
-                        loading="lazy"
+                        containerSize={56}
+                        maxIconSize={36}
+                        minIconSize={24}
                       />
                     ) : (
                       <span 
-                        className="font-bold gradient-text-accent"
-                        style={{ fontSize: `${(item.icon_scale || 100) * 0.22}px` }}
+                        className="text-xl font-bold gradient-text-accent"
                       >
                         {item.name.charAt(0)}
                       </span>
