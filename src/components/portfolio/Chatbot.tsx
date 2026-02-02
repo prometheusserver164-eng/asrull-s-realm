@@ -19,7 +19,7 @@ export function Chatbot() {
     {
       id: "welcome",
       role: "assistant",
-      content: "Halo! 👋 Saya asisten portfolio Asrull. Ada yang bisa saya bantu? Tanyakan tentang projects, skills, atau pengalaman saya!",
+      content: "Hello! I'm Asrull's portfolio assistant. How can I help you? Feel free to ask about my projects, skills, or experience!",
     },
   ]);
   const [input, setInput] = useState("");
@@ -62,7 +62,7 @@ export function Chatbot() {
       const assistantMessage: Message = {
         id: (Date.now() + 1).toString(),
         role: "assistant",
-        content: data.reply || "Maaf, terjadi kesalahan.",
+        content: data.reply || "Sorry, something went wrong.",
       };
 
       setMessages((prev) => [...prev, assistantMessage]);
@@ -73,7 +73,7 @@ export function Chatbot() {
         {
           id: (Date.now() + 1).toString(),
           role: "assistant",
-          content: "Maaf, terjadi kesalahan. Silakan coba lagi.",
+          content: "Sorry, something went wrong. Please try again.",
         },
       ]);
     } finally {
@@ -201,7 +201,7 @@ export function Chatbot() {
                   value={input}
                   onChange={(e) => setInput(e.target.value)}
                   onKeyDown={handleKeyPress}
-                  placeholder="Tanya sesuatu..."
+                  placeholder="Ask something..."
                   className="flex-1 rounded-xl border-border/50 focus-visible:ring-primary"
                   disabled={isLoading}
                 />
