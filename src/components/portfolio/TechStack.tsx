@@ -1,16 +1,22 @@
 import { motion } from "framer-motion";
-import { useInView } from "framer-motion";
-import { useRef, useState } from "react";
+import { useState } from "react";
 import { useTechStack } from "@/hooks/useProfile";
 import { cn } from "@/lib/utils";
+import { Loader2 } from "lucide-react";
 
 export function TechStack() {
-  const ref = useRef(null);
-  const isInView = useInView(ref, { once: true, margin: "-100px" });
-  const { data } = useTechStack();
+  const { data, isLoading } = useTechStack();
   const [activeCategory, setActiveCategory] = useState<string | null>(null);
 
-  if (!data) return null;
+  if (isLoading) {
+    return (
+      <section id="skills" className="py-24 md:py-32 flex items-center justify-center">
+        <Loader2 className="w-8 h-8 animate-spin text-primary" />
+      </section>
+    );
+  }
+
+  if (!data || data.items.length === 0) return null;
 
   const { categories, items } = data;
 
@@ -30,7 +36,6 @@ export function TechStack() {
   return (
     <section
       id="skills"
-      ref={ref}
       className="py-24 md:py-32 relative overflow-hidden"
     >
       {/* Background Elements */}
@@ -43,13 +48,15 @@ export function TechStack() {
         {/* Section Header */}
         <motion.div
           initial={{ opacity: 0, y: 30 }}
-          animate={isInView ? { opacity: 1, y: 0 } : {}}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, margin: "-50px" }}
           transition={{ duration: 0.6 }}
           className="text-center mb-16"
         >
           <motion.span
             initial={{ opacity: 0, y: 20 }}
-            animate={isInView ? { opacity: 1, y: 0 } : {}}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
             transition={{ duration: 0.5, delay: 0.1 }}
             className="inline-block px-4 py-1.5 rounded-full bg-primary/10 border border-primary/20 text-primary text-sm font-medium mb-6"
           >
@@ -66,7 +73,8 @@ export function TechStack() {
         {/* Category Filter */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
-          animate={isInView ? { opacity: 1, y: 0 } : {}}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
           transition={{ duration: 0.5, delay: 0.2 }}
           className="flex flex-wrap justify-center gap-3 mb-12"
         >
@@ -107,8 +115,8 @@ export function TechStack() {
               key={item.id}
               layout
               initial={{ opacity: 0, scale: 0.9 }}
-              animate={isInView ? { opacity: 1, scale: 1 } : {}}
-              exit={{ opacity: 0, scale: 0.9 }}
+              whileInView={{ opacity: 1, scale: 1 }}
+              viewport={{ once: true }}
               transition={{
                 duration: 0.4,
                 delay: index * 0.03,
@@ -125,7 +133,8 @@ export function TechStack() {
                 <div className="absolute bottom-0 left-0 right-0 h-1 bg-border overflow-hidden">
                   <motion.div
                     initial={{ width: 0 }}
-                    animate={isInView ? { width: `${item.proficiency}%` } : {}}
+                    whileInView={{ width: `${item.proficiency}%` }}
+                    viewport={{ once: true }}
                     transition={{ duration: 0.8, delay: index * 0.03 + 0.3 }}
                     className="h-full bg-gradient-to-r from-primary to-accent"
                   />
@@ -182,7 +191,8 @@ export function TechStack() {
         {/* Summary Stats */}
         <motion.div
           initial={{ opacity: 0, y: 30 }}
-          animate={isInView ? { opacity: 1, y: 0 } : {}}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
           transition={{ duration: 0.6, delay: 0.5 }}
           className="mt-16 grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-6"
         >
@@ -195,7 +205,8 @@ export function TechStack() {
             <motion.div
               key={stat.label}
               initial={{ opacity: 0, y: 20 }}
-              animate={isInView ? { opacity: 1, y: 0 } : {}}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
               transition={{ duration: 0.5, delay: 0.6 + index * 0.1 }}
               className="text-center p-5 rounded-2xl bg-card/50 border border-border/50 backdrop-blur-sm"
             >
