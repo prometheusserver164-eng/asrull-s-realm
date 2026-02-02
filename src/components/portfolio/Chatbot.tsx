@@ -6,6 +6,7 @@ import { Input } from "@/components/ui/input";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { supabase } from "@/integrations/supabase/client";
 import ReactMarkdown from "react-markdown";
+import { useLanguage } from "@/contexts/LanguageContext";
 
 interface Message {
   id: string;
@@ -14,17 +15,23 @@ interface Message {
 }
 
 export function Chatbot() {
+  const { t } = useLanguage();
   const [isOpen, setIsOpen] = useState(false);
-  const [messages, setMessages] = useState<Message[]>([
-    {
-      id: "welcome",
-      role: "assistant",
-      content: "Hello! I'm Asrull's portfolio assistant. How can I help you? Feel free to ask about my projects, skills, or experience!",
-    },
-  ]);
+  const [messages, setMessages] = useState<Message[]>([]);
   const [input, setInput] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const scrollRef = useRef<HTMLDivElement>(null);
+
+  // Initialize welcome message with translation
+  useEffect(() => {
+    setMessages([
+      {
+        id: "welcome",
+        role: "assistant",
+        content: t("chatbot.welcome"),
+      },
+    ]);
+  }, [t]);
 
   useEffect(() => {
     if (scrollRef.current) {
@@ -73,7 +80,7 @@ export function Chatbot() {
         {
           id: (Date.now() + 1).toString(),
           role: "assistant",
-          content: "Sorry, something went wrong. Please try again.",
+          content: t("chatbot.error"),
         },
       ]);
     } finally {
@@ -138,8 +145,8 @@ export function Chatbot() {
                   <Bot className="w-5 h-5 text-primary" />
                 </div>
                 <div>
-                  <h3 className="font-semibold text-foreground">Asrull's Assistant</h3>
-                  <p className="text-xs text-muted-foreground">Always here to help</p>
+                  <h3 className="font-semibold text-foreground">{t("chatbot.title")}</h3>
+                  <p className="text-xs text-muted-foreground">{t("chatbot.subtitle")}</p>
                 </div>
               </div>
             </div>
@@ -201,7 +208,7 @@ export function Chatbot() {
                   value={input}
                   onChange={(e) => setInput(e.target.value)}
                   onKeyDown={handleKeyPress}
-                  placeholder="Ask something..."
+                  placeholder={t("chatbot.placeholder")}
                   className="flex-1 rounded-xl border-border/50 focus-visible:ring-primary"
                   disabled={isLoading}
                 />

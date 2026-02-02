@@ -66,6 +66,8 @@ const translations: Record<Language, Record<string, string>> = {
     "projects.loading": "Memuat pratinjau...",
     "projects.view_live": "Lihat Demo",
     "projects.view_code": "Lihat Kode",
+    "projects.website_preview": "Pratinjau Website",
+    "projects.click_live": "Klik 'Demo' untuk mengunjungi situs",
     
     // Timeline
     "timeline.label": "Perjalanan",
@@ -96,6 +98,13 @@ const translations: Record<Language, Record<string, string>> = {
     // Footer
     "footer.crafted_by": "Dibuat oleh",
     "footer.rights": "Hak cipta dilindungi.",
+    
+    // Chatbot
+    "chatbot.title": "Asisten Asrull",
+    "chatbot.subtitle": "Selalu siap membantu",
+    "chatbot.welcome": "Halo! Saya asisten portfolio Asrull. Ada yang bisa saya bantu? Silakan tanya tentang proyek, keahlian, atau pengalaman saya!",
+    "chatbot.placeholder": "Tanya sesuatu...",
+    "chatbot.error": "Maaf, terjadi kesalahan. Silakan coba lagi.",
     
     // Common
     "common.loading": "Memuat...",
@@ -155,6 +164,8 @@ const translations: Record<Language, Record<string, string>> = {
     "projects.loading": "Loading preview...",
     "projects.view_live": "View Live",
     "projects.view_code": "View Code",
+    "projects.website_preview": "Website Preview",
+    "projects.click_live": "Click 'Live' to visit the site",
     
     // Timeline
     "timeline.label": "Journey",
@@ -185,6 +196,13 @@ const translations: Record<Language, Record<string, string>> = {
     // Footer
     "footer.crafted_by": "Crafted by",
     "footer.rights": "All rights reserved.",
+    
+    // Chatbot
+    "chatbot.title": "Asrull's Assistant",
+    "chatbot.subtitle": "Always here to help",
+    "chatbot.welcome": "Hello! I'm Asrull's portfolio assistant. How can I help you? Feel free to ask about my projects, skills, or experience!",
+    "chatbot.placeholder": "Ask something...",
+    "chatbot.error": "Sorry, something went wrong. Please try again.",
     
     // Common
     "common.loading": "Loading...",
