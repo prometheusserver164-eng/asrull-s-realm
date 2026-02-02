@@ -27,10 +27,14 @@ export default function Index() {
 
       // Update favicon if set
       if (profile.favicon_url) {
-        const favicon = document.querySelector('link[rel="icon"]') as HTMLLinkElement;
-        if (favicon) {
-          favicon.href = profile.favicon_url;
+        let favicon = document.querySelector('link[rel="icon"]') as HTMLLinkElement;
+        if (!favicon) {
+          favicon = document.createElement('link');
+          favicon.rel = 'icon';
+          favicon.type = 'image/png';
+          document.head.appendChild(favicon);
         }
+        favicon.href = profile.favicon_url;
       }
     }
   }, [profile]);
