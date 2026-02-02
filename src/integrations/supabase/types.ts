@@ -224,6 +224,7 @@ export type Database = {
           created_at: string
           custom_icon_url: string | null
           icon_name: string | null
+          icon_scale: number | null
           id: string
           is_featured: boolean | null
           name: string
@@ -235,6 +236,7 @@ export type Database = {
           created_at?: string
           custom_icon_url?: string | null
           icon_name?: string | null
+          icon_scale?: number | null
           id?: string
           is_featured?: boolean | null
           name: string
@@ -246,6 +248,7 @@ export type Database = {
           created_at?: string
           custom_icon_url?: string | null
           icon_name?: string | null
+          icon_scale?: number | null
           id?: string
           is_featured?: boolean | null
           name?: string

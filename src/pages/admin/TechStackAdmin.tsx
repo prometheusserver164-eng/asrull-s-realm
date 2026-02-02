@@ -25,6 +25,7 @@ interface TechItem {
   category_id: string | null;
   icon_name: string | null;
   custom_icon_url: string | null;
+  icon_scale: number;
   proficiency: number;
   is_featured: boolean;
   sort_order: number;
@@ -35,6 +36,7 @@ const emptyItem: Partial<TechItem> = {
   category_id: null,
   icon_name: "",
   custom_icon_url: null,
+  icon_scale: 100,
   proficiency: 80,
   is_featured: false,
   sort_order: 0,
@@ -365,6 +367,51 @@ export default function TechStackAdmin() {
                   </p>
                 </TabsContent>
               </Tabs>
+            </div>
+
+            <div>
+              <label className="block text-sm font-medium text-foreground mb-2">
+                Icon Size ({editingItem?.icon_scale || 100}%)
+              </label>
+              <div className="flex items-center gap-4">
+                <Input
+                  type="range"
+                  min="50"
+                  max="150"
+                  step="10"
+                  value={editingItem?.icon_scale || 100}
+                  onChange={(e) =>
+                    setEditingItem((prev) => ({
+                      ...prev,
+                      icon_scale: parseInt(e.target.value),
+                    }))
+                  }
+                  className="bg-background flex-1"
+                />
+                <div className="w-16 h-16 rounded-xl bg-background border border-border flex items-center justify-center overflow-hidden">
+                  {editingItem?.custom_icon_url ? (
+                    <img
+                      src={editingItem.custom_icon_url}
+                      alt="Preview"
+                      style={{
+                        width: `${(editingItem?.icon_scale || 100) * 0.32}px`,
+                        height: `${(editingItem?.icon_scale || 100) * 0.32}px`,
+                      }}
+                      className="object-contain"
+                    />
+                  ) : (
+                    <span 
+                      className="font-bold gradient-text-accent"
+                      style={{ fontSize: `${(editingItem?.icon_scale || 100) * 0.2}px` }}
+                    >
+                      {editingItem?.name?.charAt(0) || "?"}
+                    </span>
+                  )}
+                </div>
+              </div>
+              <p className="text-xs text-foreground-muted mt-2">
+                Sesuaikan ukuran icon (50% - 150%)
+              </p>
             </div>
 
             <div>
