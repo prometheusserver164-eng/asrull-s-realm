@@ -3,24 +3,7 @@ import { useInView } from "framer-motion";
 import { useRef } from "react";
 import { User, Code, Zap, Sparkles } from "lucide-react";
 import { useProfile } from "@/hooks/useProfile";
-
-const aboutCards = [
-  {
-    icon: User,
-    title: "Who I Am",
-    description: "A passionate developer from Indonesia, currently pursuing Computer Science while building real-world applications.",
-  },
-  {
-    icon: Code,
-    title: "What I Build",
-    description: "Full-stack web applications, game server backends, and scalable systems using modern technologies.",
-  },
-  {
-    icon: Zap,
-    title: "What Drives Me",
-    description: "Clean code, elegant solutions, learning new technologies, and creating seamless user experiences.",
-  },
-];
+import { useLanguage } from "@/contexts/LanguageContext";
 
 const containerVariants = {
   hidden: { opacity: 0 },
@@ -67,6 +50,25 @@ export function About() {
   const ref = useRef(null);
   const isInView = useInView(ref, { once: true, margin: "-100px" });
   const { data: profile } = useProfile();
+  const { t } = useLanguage();
+
+  const aboutCards = [
+    {
+      icon: User,
+      titleKey: "about.who_i_am",
+      descKey: "about.who_i_am_desc",
+    },
+    {
+      icon: Code,
+      titleKey: "about.what_i_build",
+      descKey: "about.what_i_build_desc",
+    },
+    {
+      icon: Zap,
+      titleKey: "about.what_drives_me",
+      descKey: "about.what_drives_me_desc",
+    },
+  ];
 
   return (
     <section id="about" className="relative py-16 sm:py-24 lg:py-32 overflow-hidden">
@@ -99,7 +101,7 @@ export function About() {
             <motion.div variants={itemVariants} className="inline-flex items-center gap-2 mb-3 sm:mb-4">
               <Sparkles className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-primary" />
               <span className="text-primary text-xs sm:text-sm font-medium uppercase tracking-widest">
-                About Me
+                {t("about.label")}
               </span>
               <Sparkles className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-primary" />
             </motion.div>
@@ -107,9 +109,9 @@ export function About() {
               variants={itemVariants}
               className="font-display text-3xl sm:text-4xl md:text-5xl font-bold text-foreground mb-4 sm:mb-6"
             >
-              Turning Ideas Into{" "}
+              {t("about.title_1")}{" "}
               <span className="relative inline-block">
-                <span className="gradient-text-accent">Reality</span>
+                <span className="gradient-text-accent">{t("about.title_2")}</span>
                 <motion.span
                   initial={{ scaleX: 0 }}
                   animate={isInView ? { scaleX: 1 } : {}}
@@ -128,9 +130,9 @@ export function About() {
 
           {/* About Cards */}
           <motion.div variants={itemVariants} className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
-            {aboutCards.map((card, index) => (
+            {aboutCards.map((card) => (
               <motion.div
-                key={card.title}
+                key={card.titleKey}
                 variants={cardHoverVariants}
                 initial="rest"
                 whileHover="hover"
@@ -151,10 +153,10 @@ export function About() {
                   <card.icon className="w-5 h-5 sm:w-5 sm:h-5 lg:w-6 lg:h-6 text-primary" />
                 </motion.div>
                 <h3 className="relative font-display text-lg sm:text-xl font-semibold text-foreground mb-2 sm:mb-3">
-                  {card.title}
+                  {t(card.titleKey)}
                 </h3>
                 <p className="relative text-sm sm:text-base text-foreground-secondary leading-relaxed">
-                  {card.description}
+                  {t(card.descKey)}
                 </p>
               </motion.div>
             ))}
@@ -166,13 +168,13 @@ export function About() {
             className="mt-10 sm:mt-12 lg:mt-16 grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4 lg:gap-6"
           >
             {[
-              { value: "3+", label: "Years Experience" },
-              { value: "20+", label: "Projects Completed" },
-              { value: "10+", label: "Technologies" },
-              { value: "∞", label: "Lines of Code" },
+              { value: "3+", labelKey: "about.years_exp" },
+              { value: "20+", labelKey: "about.projects_done" },
+              { value: "10+", labelKey: "about.technologies" },
+              { value: "∞", labelKey: "about.lines_of_code" },
             ].map((stat, index) => (
               <motion.div
-                key={stat.label}
+                key={stat.labelKey}
                 initial={{ opacity: 0, scale: 0.8 }}
                 animate={isInView ? { opacity: 1, scale: 1 } : {}}
                 transition={{ 
@@ -195,7 +197,7 @@ export function About() {
                 >
                   {stat.value}
                 </motion.div>
-                <div className="text-xs sm:text-sm text-foreground-muted">{stat.label}</div>
+                <div className="text-xs sm:text-sm text-foreground-muted">{t(stat.labelKey)}</div>
               </motion.div>
             ))}
           </motion.div>

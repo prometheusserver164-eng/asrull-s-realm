@@ -4,6 +4,7 @@ import { useRef } from "react";
 import { GraduationCap, Briefcase, MapPin, Trophy, Sparkles } from "lucide-react";
 import { useTimeline } from "@/hooks/useProfile";
 import { format } from "date-fns";
+import { useLanguage } from "@/contexts/LanguageContext";
 
 const typeIcons: Record<string, React.ElementType> = {
   education: GraduationCap,
@@ -21,6 +22,7 @@ export function Timeline() {
   const ref = useRef(null);
   const isInView = useInView(ref, { once: true, margin: "-100px" });
   const { data: timeline } = useTimeline();
+  const { t } = useLanguage();
 
   const displayTimeline = timeline?.length ? timeline : [
     {
@@ -89,7 +91,7 @@ export function Timeline() {
             >
               <Sparkles className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-primary" />
               <span className="text-primary text-xs sm:text-sm font-medium uppercase tracking-widest">
-                Journey
+                {t("timeline.label")}
               </span>
               <Sparkles className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-primary" />
             </motion.div>
@@ -99,9 +101,9 @@ export function Timeline() {
               transition={{ duration: 0.5, delay: 0.2 }}
               className="font-display text-3xl sm:text-4xl md:text-5xl font-bold text-foreground mb-4 sm:mb-6"
             >
-              Experience &{" "}
+              {t("timeline.title_1")}{" "}
               <span className="relative inline-block">
-                <span className="gradient-text-accent">Education</span>
+                <span className="gradient-text-accent">{t("timeline.title_2")}</span>
                 <motion.span
                   initial={{ scaleX: 0 }}
                   animate={isInView ? { scaleX: 1 } : {}}
@@ -116,7 +118,7 @@ export function Timeline() {
               transition={{ duration: 0.5, delay: 0.3 }}
               className="text-base sm:text-lg text-foreground-secondary max-w-2xl mx-auto px-4"
             >
-              My professional journey and academic background
+              {t("timeline.subtitle")}
             </motion.p>
           </div>
 
@@ -191,7 +193,7 @@ export function Timeline() {
                           >
                             <Trophy className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-amber-500" />
                             <span className="text-[10px] sm:text-xs font-bold text-amber-500 uppercase tracking-wide">
-                              Achievement
+                              {t("timeline.achievement")}
                             </span>
                           </motion.div>
                         )}
@@ -199,7 +201,7 @@ export function Timeline() {
                         {/* Date Badge */}
                         <div className={`flex items-center gap-2 mb-2 sm:mb-3 ${isLeft ? "lg:justify-end" : ""}`}>
                           <span className={`px-2 sm:px-3 py-0.5 sm:py-1 rounded-full text-[10px] sm:text-xs font-medium ${isAchievement ? "bg-amber-500/10 text-amber-500" : "bg-primary/10 text-primary"}`}>
-                            {formatDate(item.start_date)} - {item.is_current ? "Present" : item.end_date ? formatDate(item.end_date) : ""}
+                            {formatDate(item.start_date)} - {item.is_current ? t("timeline.present") : item.end_date ? formatDate(item.end_date) : ""}
                           </span>
                         </div>
 

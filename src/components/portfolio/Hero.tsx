@@ -3,6 +3,7 @@ import { MapPin, ArrowDown, Sparkles } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useProfile } from "@/hooks/useProfile";
 import { useRef } from "react";
+import { useLanguage } from "@/contexts/LanguageContext";
 
 // Floating particles component
 function FloatingParticles() {
@@ -46,6 +47,7 @@ function FloatingParticles() {
 
 export function Hero() {
   const { data: profile } = useProfile();
+  const { t } = useLanguage();
   const containerRef = useRef(null);
   const { scrollYProgress } = useScroll({
     target: containerRef,
@@ -130,7 +132,7 @@ export function Hero() {
               variants={textVariants}
               className="block text-base sm:text-lg md:text-xl text-foreground-secondary font-medium mb-1 sm:mb-2"
             >
-              Hello, I'm
+              {t("hero.greeting")}
             </motion.span>
             <h1 className="font-display text-4xl sm:text-5xl md:text-6xl lg:text-7xl xl:text-8xl font-bold tracking-tight">
               <motion.span
@@ -200,7 +202,7 @@ export function Hero() {
                 onClick={scrollToProjects}
                 className="min-w-[160px] sm:min-w-[180px] text-sm sm:text-base"
               >
-                View Projects
+                {t("hero.view_projects")}
               </Button>
             </motion.div>
             <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
@@ -210,7 +212,7 @@ export function Hero() {
                 onClick={scrollToContact}
                 className="min-w-[160px] sm:min-w-[180px] text-sm sm:text-base"
               >
-                Contact Me
+                {t("hero.contact_me")}
               </Button>
             </motion.div>
           </motion.div>
@@ -229,7 +231,7 @@ export function Hero() {
             className="flex flex-col items-center gap-1.5 sm:gap-2 text-foreground-muted cursor-pointer"
             onClick={() => document.getElementById("about")?.scrollIntoView({ behavior: "smooth" })}
           >
-            <span className="text-[10px] sm:text-xs uppercase tracking-widest">Scroll</span>
+            <span className="text-[10px] sm:text-xs uppercase tracking-widest">{t("hero.scroll")}</span>
             <motion.div
               animate={{ opacity: [0.5, 1, 0.5] }}
               transition={{ duration: 2, repeat: Infinity }}

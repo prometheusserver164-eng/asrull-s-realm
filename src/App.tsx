@@ -5,6 +5,7 @@ import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { ThemeProvider } from "./components/ThemeProvider";
+import { LanguageProvider } from "./contexts/LanguageContext";
 import { LoadingScreen } from "./components/LoadingScreen";
 import Index from "./pages/Index";
 import Auth from "./pages/Auth";
@@ -28,38 +29,40 @@ const App = () => {
 
   return (
     <ThemeProvider defaultTheme="dark" storageKey="portfolio-theme">
-      <QueryClientProvider client={queryClient}>
-        <TooltipProvider>
-          {isLoading && (
-            <LoadingScreen onLoadingComplete={() => setIsLoading(false)} />
-          )}
-          <Toaster />
-          <Sonner />
-          <BrowserRouter>
-            <Routes>
-              <Route path="/" element={<Index />} />
-              <Route path="/auth" element={<Auth />} />
-              
-              {/* Admin Routes */}
-              <Route path="/admin" element={<AdminLayout />}>
-                <Route index element={<Dashboard />} />
-                <Route path="profile" element={<ProfileAdmin />} />
-                <Route path="projects" element={<ProjectsAdmin />} />
-                <Route path="tech-stack" element={<TechStackAdmin />} />
-                <Route path="timeline" element={<TimelineAdmin />} />
-                <Route path="social" element={<SocialAdmin />} />
-                <Route path="messages" element={<MessagesAdmin />} />
-                <Route path="analytics" element={<AnalyticsAdmin />} />
-                <Route path="security" element={<SecurityAdmin />} />
-                <Route path="settings" element={<SettingsAdmin />} />
-              </Route>
+      <LanguageProvider>
+        <QueryClientProvider client={queryClient}>
+          <TooltipProvider>
+            {isLoading && (
+              <LoadingScreen onLoadingComplete={() => setIsLoading(false)} />
+            )}
+            <Toaster />
+            <Sonner />
+            <BrowserRouter>
+              <Routes>
+                <Route path="/" element={<Index />} />
+                <Route path="/auth" element={<Auth />} />
+                
+                {/* Admin Routes */}
+                <Route path="/admin" element={<AdminLayout />}>
+                  <Route index element={<Dashboard />} />
+                  <Route path="profile" element={<ProfileAdmin />} />
+                  <Route path="projects" element={<ProjectsAdmin />} />
+                  <Route path="tech-stack" element={<TechStackAdmin />} />
+                  <Route path="timeline" element={<TimelineAdmin />} />
+                  <Route path="social" element={<SocialAdmin />} />
+                  <Route path="messages" element={<MessagesAdmin />} />
+                  <Route path="analytics" element={<AnalyticsAdmin />} />
+                  <Route path="security" element={<SecurityAdmin />} />
+                  <Route path="settings" element={<SettingsAdmin />} />
+                </Route>
 
-              {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
-              <Route path="*" element={<NotFound />} />
-            </Routes>
-          </BrowserRouter>
-        </TooltipProvider>
-      </QueryClientProvider>
+                {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
+                <Route path="*" element={<NotFound />} />
+              </Routes>
+            </BrowserRouter>
+          </TooltipProvider>
+        </QueryClientProvider>
+      </LanguageProvider>
     </ThemeProvider>
   );
 };
