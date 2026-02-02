@@ -1,6 +1,6 @@
 import { motion } from "framer-motion";
 import { useProfile, useSocialLinks } from "@/hooks/useProfile";
-import { Instagram, Mail, Github, Linkedin, Twitter, Youtube, Globe, ArrowUp, Code } from "lucide-react";
+import { Instagram, Mail, Github, Linkedin, Twitter, Youtube, Globe } from "lucide-react";
 
 const socialIcons: Record<string, React.ElementType> = {
   instagram: Instagram,
@@ -17,10 +17,6 @@ export function Footer() {
   const { data: profile } = useProfile();
   const { data: socialLinks } = useSocialLinks();
 
-  const scrollToTop = () => {
-    window.scrollTo({ top: 0, behavior: "smooth" });
-  };
-
   return (
     <footer className="relative py-16 sm:py-20 lg:py-24 border-t border-border/30 overflow-hidden bg-gradient-to-b from-background to-background/95">
       {/* Background Decoration */}
@@ -34,25 +30,12 @@ export function Footer() {
       </div>
 
       <div className="container max-w-4xl mx-auto px-6 sm:px-8 relative">
-        {/* Scroll to Top Button */}
-        <motion.button
-          initial={{ opacity: 0, scale: 0.8 }}
-          whileInView={{ opacity: 1, scale: 1 }}
-          viewport={{ once: true }}
-          whileHover={{ scale: 1.1, y: -3 }}
-          whileTap={{ scale: 0.95 }}
-          onClick={scrollToTop}
-          className="absolute -top-7 left-1/2 -translate-x-1/2 w-14 h-14 rounded-full bg-primary text-primary-foreground flex items-center justify-center shadow-xl shadow-primary/25 hover:shadow-primary/40 transition-all duration-300 border border-primary-foreground/10"
-        >
-          <ArrowUp className="w-5 h-5" />
-        </motion.button>
-
         <motion.div
           initial={{ opacity: 0, y: 30 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.6 }}
-          className="flex flex-col items-center gap-8 pt-8"
+          className="flex flex-col items-center gap-8"
         >
           {/* Logo */}
           <motion.p
