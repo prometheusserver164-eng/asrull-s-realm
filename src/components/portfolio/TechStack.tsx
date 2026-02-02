@@ -1,25 +1,28 @@
 import { motion } from "framer-motion";
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect } from "react";
 import { useTechStack } from "@/hooks/useProfile";
 import { cn } from "@/lib/utils";
 import { Loader2 } from "lucide-react";
 
-// Auto-scaling icon component
+// Auto-scaling icon component with user scale override
 function AutoScaleIcon({ 
   src, 
   alt, 
+  userScale = 100,
   containerSize = 56,
-  maxIconSize = 36,
-  minIconSize = 24
 }: { 
   src: string; 
   alt: string;
+  userScale?: number;
   containerSize?: number;
-  maxIconSize?: number;
-  minIconSize?: number;
 }) {
-  const [dimensions, setDimensions] = useState({ width: maxIconSize, height: maxIconSize });
+  const [dimensions, setDimensions] = useState({ width: 40, height: 40 });
   const [loaded, setLoaded] = useState(false);
+
+  // Base size - larger default
+  const baseSize = 44; // Base icon size
+  const minSize = 32;
+  const maxSize = 48;
 
   useEffect(() => {
     const img = new Image();
@@ -29,50 +32,38 @@ function AutoScaleIcon({
       // Calculate aspect ratio
       const aspectRatio = naturalWidth / naturalHeight;
       
+      // Apply user scale (100 = normal, 150 = 50% bigger)
+      const scaleFactor = userScale / 100;
+      const targetSize = Math.min(maxSize, Math.max(minSize, baseSize * scaleFactor));
+      
       let width: number;
       let height: number;
       
       if (aspectRatio >= 1) {
-        // Landscape or square - fit to width
-        width = Math.min(maxIconSize, Math.max(minIconSize, naturalWidth));
-        height = width / aspectRatio;
-        
-        // If height is too small, adjust
-        if (height < minIconSize) {
-          height = minIconSize;
-          width = height * aspectRatio;
-        }
+        // Landscape or square
+        width = targetSize;
+        height = targetSize / aspectRatio;
       } else {
-        // Portrait - fit to height
-        height = Math.min(maxIconSize, Math.max(minIconSize, naturalHeight));
-        width = height * aspectRatio;
-        
-        // If width is too small, adjust
-        if (width < minIconSize) {
-          width = minIconSize;
-          height = width / aspectRatio;
-        }
+        // Portrait
+        height = targetSize;
+        width = targetSize * aspectRatio;
       }
       
-      // Cap at max size
-      if (width > maxIconSize) {
-        width = maxIconSize;
-        height = width / aspectRatio;
-      }
-      if (height > maxIconSize) {
-        height = maxIconSize;
-        width = height * aspectRatio;
-      }
+      // Ensure minimum visibility
+      width = Math.max(minSize * 0.8, width);
+      height = Math.max(minSize * 0.8, height);
       
       setDimensions({ width, height });
       setLoaded(true);
     };
     img.onerror = () => {
-      setDimensions({ width: maxIconSize, height: maxIconSize });
+      const scaleFactor = userScale / 100;
+      const size = Math.min(maxSize, baseSize * scaleFactor);
+      setDimensions({ width: size, height: size });
       setLoaded(true);
     };
     img.src = src;
-  }, [src, maxIconSize, minIconSize]);
+  }, [src, userScale]);
 
   return (
     <img
@@ -228,20 +219,17 @@ export function TechStack() {
 
                 {/* Content */}
                 <div className="relative z-10 flex flex-col items-center text-center space-y-3">
-                  {/* Tech Logo - Auto-scaled */}
-                  <div className="w-14 h-14 flex items-center justify-center rounded-xl bg-background/50 border border-border/50 group-hover:border-primary/30 transition-colors duration-300 overflow-hidden">
+                  {/* Tech Logo - Auto-scaled with user override */}
+                  <div className="w-16 h-16 flex items-center justify-center rounded-xl bg-background/50 border border-border/50 group-hover:border-primary/30 transition-colors duration-300 overflow-hidden">
                     {item.custom_icon_url ? (
                       <AutoScaleIcon
                         src={item.custom_icon_url}
                         alt={item.name}
-                        containerSize={56}
-                        maxIconSize={36}
-                        minIconSize={24}
+                        userScale={item.icon_scale || 100}
+                        containerSize={64}
                       />
                     ) : (
-                      <span 
-                        className="text-xl font-bold gradient-text-accent"
-                      >
+                      <span className="text-2xl font-bold gradient-text-accent">
                         {item.name.charAt(0)}
                       </span>
                     )}
