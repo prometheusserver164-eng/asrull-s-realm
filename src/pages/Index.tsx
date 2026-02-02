@@ -8,6 +8,7 @@ import { Projects } from "@/components/portfolio/Projects";
 import { Timeline } from "@/components/portfolio/Timeline";
 import { Contact } from "@/components/portfolio/Contact";
 import { Footer } from "@/components/portfolio/Footer";
+import { Chatbot } from "@/components/portfolio/Chatbot";
 import { supabase } from "@/integrations/supabase/client";
 
 export default function Index() {
@@ -67,6 +68,9 @@ export default function Index() {
 
       {/* Footer */}
       <Footer />
+
+      {/* Chatbot */}
+      <Chatbot />
     </div>
   );
 }

@@ -104,18 +104,16 @@ export function Footer() {
             className="w-32 h-px bg-gradient-to-r from-transparent via-border to-transparent"
           />
 
-          {/* Made with Code */}
-          <motion.div
+          {/* Crafted by */}
+          <motion.p
             initial={{ opacity: 0 }}
             whileInView={{ opacity: 1 }}
             viewport={{ once: true }}
             transition={{ delay: 0.5 }}
-            className="flex items-center gap-2 text-sm text-muted-foreground"
+            className="text-sm text-muted-foreground"
           >
-            <span>Crafted with</span>
-            <Code className="w-4 h-4 text-primary" />
-            <span>in Indonesia</span>
-          </motion.div>
+            Crafted by <span className="text-primary font-medium">Srull</span>
+          </motion.p>
 
           {/* Copyright */}
           <motion.p
