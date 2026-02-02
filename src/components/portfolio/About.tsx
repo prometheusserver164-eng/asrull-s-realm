@@ -1,7 +1,7 @@
 import { motion } from "framer-motion";
 import { useInView } from "framer-motion";
 import { useRef } from "react";
-import { User, Code, Heart } from "lucide-react";
+import { User, Code, Heart, Sparkles } from "lucide-react";
 import { useProfile } from "@/hooks/useProfile";
 
 const aboutCards = [
@@ -22,6 +22,47 @@ const aboutCards = [
   },
 ];
 
+const containerVariants = {
+  hidden: { opacity: 0 },
+  visible: {
+    opacity: 1,
+    transition: {
+      staggerChildren: 0.15,
+      delayChildren: 0.2,
+    },
+  },
+};
+
+const itemVariants = {
+  hidden: { opacity: 0, y: 40 },
+  visible: {
+    opacity: 1,
+    y: 0,
+    transition: {
+      type: "spring" as const,
+      stiffness: 100,
+      damping: 15,
+    },
+  },
+};
+
+const cardHoverVariants = {
+  rest: { scale: 1, rotateX: 0, rotateY: 0 },
+  hover: {
+    scale: 1.02,
+    transition: { type: "spring" as const, stiffness: 400, damping: 17 },
+  },
+};
+
+const iconVariants = {
+  rest: { scale: 1, rotate: 0 },
+  hover: {
+    scale: 1.15,
+    rotate: [0, -10, 10, 0],
+    transition: { duration: 0.4 },
+  },
+};
+
 export function About() {
   const ref = useRef(null);
   const isInView = useInView(ref, { once: true, margin: "-100px" });
@@ -29,36 +70,56 @@ export function About() {
 
   return (
     <section id="about" className="relative py-32 overflow-hidden">
+      {/* Background Decoration */}
+      <div className="absolute inset-0 pointer-events-none">
+        <motion.div
+          initial={{ opacity: 0, scale: 0.8 }}
+          animate={isInView ? { opacity: 0.1, scale: 1 } : {}}
+          transition={{ duration: 1.5, ease: "easeOut" }}
+          className="absolute top-20 -left-32 w-64 h-64 rounded-full bg-primary blur-3xl"
+        />
+        <motion.div
+          initial={{ opacity: 0, scale: 0.8 }}
+          animate={isInView ? { opacity: 0.08, scale: 1 } : {}}
+          transition={{ duration: 1.5, delay: 0.2, ease: "easeOut" }}
+          className="absolute bottom-20 -right-32 w-80 h-80 rounded-full bg-accent blur-3xl"
+        />
+      </div>
+
       <div className="section-container">
         <motion.div
           ref={ref}
-          initial={{ opacity: 0 }}
-          animate={isInView ? { opacity: 1 } : {}}
-          transition={{ duration: 0.6 }}
+          variants={containerVariants}
+          initial="hidden"
+          animate={isInView ? "visible" : "hidden"}
           className="max-w-6xl mx-auto"
         >
           {/* Section Header */}
           <div className="text-center mb-16">
-            <motion.span
-              initial={{ opacity: 0, y: 20 }}
-              animate={isInView ? { opacity: 1, y: 0 } : {}}
-              transition={{ duration: 0.5, delay: 0.1 }}
-              className="inline-block text-primary text-sm font-medium uppercase tracking-widest mb-4"
-            >
-              About Me
-            </motion.span>
+            <motion.div variants={itemVariants} className="inline-flex items-center gap-2 mb-4">
+              <Sparkles className="w-4 h-4 text-primary" />
+              <span className="text-primary text-sm font-medium uppercase tracking-widest">
+                About Me
+              </span>
+              <Sparkles className="w-4 h-4 text-primary" />
+            </motion.div>
             <motion.h2
-              initial={{ opacity: 0, y: 20 }}
-              animate={isInView ? { opacity: 1, y: 0 } : {}}
-              transition={{ duration: 0.5, delay: 0.2 }}
+              variants={itemVariants}
               className="font-display text-4xl md:text-5xl font-bold text-foreground mb-6"
             >
-              Turning Ideas Into Reality
+              Turning Ideas Into{" "}
+              <span className="relative inline-block">
+                <span className="gradient-text-accent">Reality</span>
+                <motion.span
+                  initial={{ scaleX: 0 }}
+                  animate={isInView ? { scaleX: 1 } : {}}
+                  transition={{ duration: 0.8, delay: 0.8, ease: "easeOut" }}
+                  className="absolute -bottom-2 left-0 w-full h-1 bg-gradient-to-r from-primary to-accent origin-left rounded-full"
+                />
+              </span>
             </motion.h2>
             <motion.p
-              initial={{ opacity: 0, y: 20 }}
-              animate={isInView ? { opacity: 1, y: 0 } : {}}
-              transition={{ duration: 0.5, delay: 0.3 }}
+              variants={itemVariants}
               className="text-lg text-foreground-secondary max-w-2xl mx-auto"
             >
               {profile?.about || "Full-stack developer passionate about building scalable applications."}
@@ -66,33 +127,42 @@ export function About() {
           </div>
 
           {/* About Cards */}
-          <div className="grid md:grid-cols-3 gap-6">
+          <motion.div variants={itemVariants} className="grid md:grid-cols-3 gap-6">
             {aboutCards.map((card, index) => (
               <motion.div
                 key={card.title}
-                initial={{ opacity: 0, y: 30 }}
-                animate={isInView ? { opacity: 1, y: 0 } : {}}
-                transition={{ duration: 0.5, delay: 0.4 + index * 0.1 }}
-                className="card-interactive p-8 group"
+                variants={cardHoverVariants}
+                initial="rest"
+                whileHover="hover"
+                className="card-interactive p-8 group relative overflow-hidden"
               >
-                <div className="w-14 h-14 rounded-xl bg-primary/10 border border-primary/20 flex items-center justify-center mb-6 group-hover:bg-primary/20 transition-colors duration-300">
+                {/* Animated Border */}
+                <motion.div
+                  className="absolute inset-0 rounded-xl opacity-0 group-hover:opacity-100 transition-opacity duration-500"
+                  style={{
+                    background: "linear-gradient(135deg, hsl(var(--primary) / 0.2), transparent, hsl(var(--accent) / 0.2))",
+                  }}
+                />
+
+                <motion.div
+                  variants={iconVariants}
+                  className="relative w-14 h-14 rounded-xl bg-primary/10 border border-primary/20 flex items-center justify-center mb-6"
+                >
                   <card.icon className="w-6 h-6 text-primary" />
-                </div>
-                <h3 className="font-display text-xl font-semibold text-foreground mb-3">
+                </motion.div>
+                <h3 className="relative font-display text-xl font-semibold text-foreground mb-3">
                   {card.title}
                 </h3>
-                <p className="text-foreground-secondary leading-relaxed">
+                <p className="relative text-foreground-secondary leading-relaxed">
                   {card.description}
                 </p>
               </motion.div>
             ))}
-          </div>
+          </motion.div>
 
-          {/* Stats */}
+          {/* Stats with Counter Animation */}
           <motion.div
-            initial={{ opacity: 0, y: 30 }}
-            animate={isInView ? { opacity: 1, y: 0 } : {}}
-            transition={{ duration: 0.5, delay: 0.7 }}
+            variants={itemVariants}
             className="mt-16 grid grid-cols-2 md:grid-cols-4 gap-6"
           >
             {[
@@ -101,15 +171,32 @@ export function About() {
               { value: "10+", label: "Technologies" },
               { value: "∞", label: "Lines of Code" },
             ].map((stat, index) => (
-              <div
+              <motion.div
                 key={stat.label}
-                className="text-center p-6 rounded-xl bg-card/50 border border-border/50"
+                initial={{ opacity: 0, scale: 0.8 }}
+                animate={isInView ? { opacity: 1, scale: 1 } : {}}
+                transition={{ 
+                  duration: 0.5, 
+                  delay: 0.8 + index * 0.1,
+                  type: "spring",
+                  stiffness: 100,
+                }}
+                whileHover={{ 
+                  scale: 1.05,
+                  transition: { type: "spring" as const, stiffness: 400 }
+                }}
+                className="text-center p-6 rounded-xl bg-card/50 border border-border/50 hover:border-primary/30 transition-colors duration-300"
               >
-                <div className="font-display text-3xl md:text-4xl font-bold gradient-text-accent mb-2">
+                <motion.div
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={isInView ? { opacity: 1, y: 0 } : {}}
+                  transition={{ duration: 0.5, delay: 1 + index * 0.1 }}
+                  className="font-display text-3xl md:text-4xl font-bold gradient-text-accent mb-2"
+                >
                   {stat.value}
-                </div>
+                </motion.div>
                 <div className="text-sm text-foreground-muted">{stat.label}</div>
-              </div>
+              </motion.div>
             ))}
           </motion.div>
         </motion.div>
