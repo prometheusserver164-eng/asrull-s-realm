@@ -222,6 +222,7 @@ export type Database = {
         Row: {
           category_id: string | null
           created_at: string
+          custom_icon_url: string | null
           icon_name: string | null
           id: string
           is_featured: boolean | null
@@ -232,6 +233,7 @@ export type Database = {
         Insert: {
           category_id?: string | null
           created_at?: string
+          custom_icon_url?: string | null
           icon_name?: string | null
           id?: string
           is_featured?: boolean | null
@@ -242,6 +244,7 @@ export type Database = {
         Update: {
           category_id?: string | null
           created_at?: string
+          custom_icon_url?: string | null
           icon_name?: string | null
           id?: string
           is_featured?: boolean | null
