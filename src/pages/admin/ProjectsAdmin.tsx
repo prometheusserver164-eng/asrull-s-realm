@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { motion } from "framer-motion";
-import { Plus, Pencil, Trash2, Loader2, ExternalLink, Github } from "lucide-react";
+import { Plus, Pencil, Trash2, Loader2, ExternalLink, Github, Globe } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
@@ -198,8 +198,8 @@ export default function ProjectsAdmin() {
                   className="w-full h-full object-cover"
                 />
               ) : (
-                <div className="w-full h-full flex items-center justify-center">
-                  <span className="text-4xl opacity-20">🚀</span>
+                <div className="w-full h-full flex items-center justify-center bg-gradient-to-br from-primary/5 to-accent/5">
+                  <Globe className="w-8 h-8 text-primary/50" />
                 </div>
               )}
               {project.is_featured && (
