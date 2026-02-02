@@ -29,10 +29,10 @@
     --popover: 222 40% 9%;
     --popover-foreground: 220 14% 90%;
     
-    /* === Primary (Maroon Elegant) === */
-    --primary: 0 62% 31%;
-    --primary-foreground: 0 0% 98%;
-    --primary-glow: 0 72% 38%;
+    /* === Primary (Modern Cyan/Teal) === */
+    --primary: 173 80% 50%;
+    --primary-foreground: 222 47% 6%;
+    --primary-glow: 173 90% 60%;
     
     /* === Secondary === */
     --secondary: 222 35% 14%;
@@ -43,9 +43,9 @@
     --muted-foreground: 220 10% 50%;
     
     /* === Accent === */
-    --accent: 0 62% 31%;
-    --accent-foreground: 0 0% 98%;
-    --accent-glow: 0 72% 38%;
+    --accent: 173 80% 50%;
+    --accent-foreground: 222 47% 6%;
+    --accent-glow: 173 90% 60%;
     
     /* === Destructive === */
     --destructive: 0 84% 60%;
@@ -55,7 +55,7 @@
     --border: 220 20% 18%;
     --border-subtle: 220 15% 14%;
     --input: 222 30% 14%;
-    --ring: 0 62% 31%;
+    --ring: 173 80% 50%;
     
     /* === Radius === */
     --radius: 0.75rem;
@@ -63,25 +63,25 @@
     /* === Sidebar === */
     --sidebar-background: 222 47% 6%;
     --sidebar-foreground: 220 14% 90%;
-    --sidebar-primary: 0 62% 31%;
-    --sidebar-primary-foreground: 0 0% 98%;
+    --sidebar-primary: 173 80% 50%;
+    --sidebar-primary-foreground: 222 47% 6%;
     --sidebar-accent: 222 35% 14%;
     --sidebar-accent-foreground: 220 14% 90%;
     --sidebar-border: 220 20% 18%;
-    --sidebar-ring: 0 62% 31%;
+    --sidebar-ring: 173 80% 50%;
     
     /* === Custom Gradients === */
-    --gradient-primary: linear-gradient(135deg, hsl(0 62% 31%), hsl(0 72% 38%));
+    --gradient-primary: linear-gradient(135deg, hsl(173 80% 50%), hsl(173 90% 60%));
     --gradient-dark: linear-gradient(180deg, hsl(222 47% 6%), hsl(222 40% 9%));
-    --gradient-glow: radial-gradient(ellipse at center, hsl(0 62% 31% / 0.15), transparent 70%);
+    --gradient-glow: radial-gradient(ellipse at center, hsl(173 80% 50% / 0.15), transparent 70%);
     --gradient-card: linear-gradient(145deg, hsl(222 35% 12%), hsl(222 40% 9%));
     
     /* === Shadows === */
     --shadow-sm: 0 2px 8px hsl(222 47% 4% / 0.5);
     --shadow-md: 0 4px 16px hsl(222 47% 4% / 0.6);
     --shadow-lg: 0 8px 32px hsl(222 47% 4% / 0.7);
-    --shadow-glow: 0 0 40px hsl(0 62% 31% / 0.3);
-    --shadow-glow-sm: 0 0 20px hsl(0 62% 31% / 0.2);
+    --shadow-glow: 0 0 40px hsl(173 80% 50% / 0.3);
+    --shadow-glow-sm: 0 0 20px hsl(173 80% 50% / 0.2);
   }
 
   .dark {

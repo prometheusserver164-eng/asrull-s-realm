@@ -1,6 +1,17 @@
 import { motion } from "framer-motion";
 import { useProfile, useSocialLinks } from "@/hooks/useProfile";
-import { Heart } from "lucide-react";
+import { Heart, Instagram, Mail, Github, Linkedin, Twitter, Youtube, Globe } from "lucide-react";
+
+const socialIcons: Record<string, React.ElementType> = {
+  instagram: Instagram,
+  email: Mail,
+  github: Github,
+  linkedin: Linkedin,
+  twitter: Twitter,
+  youtube: Youtube,
+  discord: Globe,
+  website: Globe,
+};
 
 export function Footer() {
   const { data: profile } = useProfile();
@@ -29,19 +40,20 @@ export function Footer() {
 
           {/* Social Links */}
           <div className="flex items-center gap-4">
-            {socialLinks?.map((link) => (
-              <a
-                key={link.id}
-                href={link.url}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="w-10 h-10 rounded-lg bg-card border border-border flex items-center justify-center hover:border-primary/50 hover:bg-primary/10 transition-all duration-300"
-              >
-                <span className="text-sm capitalize text-foreground-secondary hover:text-primary">
-                  {link.type === "instagram" ? "IG" : link.type === "email" ? "✉️" : link.type.charAt(0).toUpperCase()}
-                </span>
-              </a>
-            ))}
+            {socialLinks?.map((link) => {
+              const IconComponent = socialIcons[link.type] || Globe;
+              return (
+                <a
+                  key={link.id}
+                  href={link.type === "email" ? `mailto:${link.url}` : link.url}
+                  target={link.type === "email" ? undefined : "_blank"}
+                  rel="noopener noreferrer"
+                  className="w-10 h-10 rounded-lg bg-card border border-border flex items-center justify-center hover:border-primary/50 hover:bg-primary/10 transition-all duration-300 group"
+                >
+                  <IconComponent className="w-5 h-5 text-foreground-secondary group-hover:text-primary transition-colors" />
+                </a>
+              );
+            })}
           </div>
 
           {/* Made with Love */}
