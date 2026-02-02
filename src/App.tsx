@@ -19,6 +19,7 @@ import SocialAdmin from "./pages/admin/SocialAdmin";
 import TechStackAdmin from "./pages/admin/TechStackAdmin";
 import TimelineAdmin from "./pages/admin/TimelineAdmin";
 import SettingsAdmin from "./pages/admin/SettingsAdmin";
+import SecurityAdmin from "./pages/admin/SecurityAdmin";
 
 const queryClient = new QueryClient();
 
@@ -49,6 +50,7 @@ const App = () => {
                 <Route path="social" element={<SocialAdmin />} />
                 <Route path="messages" element={<MessagesAdmin />} />
                 <Route path="analytics" element={<AnalyticsAdmin />} />
+                <Route path="security" element={<SecurityAdmin />} />
                 <Route path="settings" element={<SettingsAdmin />} />
               </Route>
 

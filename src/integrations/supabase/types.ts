@@ -18,22 +18,31 @@ export type Database = {
         Row: {
           created_at: string
           id: string
+          ip_hash: string | null
+          is_suspicious: boolean | null
           page: string
           referrer: string | null
+          session_id: string | null
           user_agent: string | null
         }
         Insert: {
           created_at?: string
           id?: string
+          ip_hash?: string | null
+          is_suspicious?: boolean | null
           page: string
           referrer?: string | null
+          session_id?: string | null
           user_agent?: string | null
         }
         Update: {
           created_at?: string
           id?: string
+          ip_hash?: string | null
+          is_suspicious?: boolean | null
           page?: string
           referrer?: string | null
+          session_id?: string | null
           user_agent?: string | null
         }
         Relationships: []
@@ -164,6 +173,45 @@ export type Database = {
           title?: string
           updated_at?: string
           video_url?: string | null
+        }
+        Relationships: []
+      }
+      security_events: {
+        Row: {
+          created_at: string
+          description: string
+          event_type: string
+          id: string
+          ip_address: string | null
+          is_resolved: boolean | null
+          metadata: Json | null
+          page: string | null
+          severity: string
+          user_agent: string | null
+        }
+        Insert: {
+          created_at?: string
+          description: string
+          event_type: string
+          id?: string
+          ip_address?: string | null
+          is_resolved?: boolean | null
+          metadata?: Json | null
+          page?: string | null
+          severity?: string
+          user_agent?: string | null
+        }
+        Update: {
+          created_at?: string
+          description?: string
+          event_type?: string
+          id?: string
+          ip_address?: string | null
+          is_resolved?: boolean | null
+          metadata?: Json | null
+          page?: string | null
+          severity?: string
+          user_agent?: string | null
         }
         Relationships: []
       }

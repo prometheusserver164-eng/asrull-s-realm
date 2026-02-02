@@ -13,6 +13,7 @@ import {
   LogOut,
   BarChart,
   ChevronLeft,
+  Shield,
 } from "lucide-react";
 import { useAuth } from "@/hooks/useAuth";
 import { Button } from "@/components/ui/button";
@@ -27,6 +28,7 @@ const sidebarLinks = [
   { href: "/admin/social", label: "Social Links", icon: Link2 },
   { href: "/admin/messages", label: "Messages", icon: Mail },
   { href: "/admin/analytics", label: "Analytics", icon: BarChart },
+  { href: "/admin/security", label: "Security", icon: Shield },
   { href: "/admin/settings", label: "Settings", icon: Settings },
 ];
 
