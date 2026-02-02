@@ -182,7 +182,7 @@ function ProjectCard({ project, index, isInView }: { project: Project; index: nu
                 transition={{ delay: 0.1 }}
                 className="space-y-6 mt-4"
               >
-                {/* Image/Video */}
+                {/* Media Preview - Website/Video/Image */}
                 <div className="aspect-video rounded-lg overflow-hidden bg-background-elevated">
                   {project.video_url ? (
                     <video
@@ -190,6 +190,14 @@ function ProjectCard({ project, index, isInView }: { project: Project; index: nu
                       controls
                       className="w-full h-full object-cover"
                     />
+                  ) : project.live_url ? (
+                    <div className="relative w-full h-full">
+                      <WebsitePreview
+                        url={project.live_url}
+                        fallbackImage={project.image_url}
+                        title={project.title}
+                      />
+                    </div>
                   ) : project.image_url ? (
                     <img
                       src={project.image_url}
