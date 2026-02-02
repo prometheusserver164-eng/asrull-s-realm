@@ -1,6 +1,6 @@
 import { motion } from "framer-motion";
 import { useProfile, useSocialLinks } from "@/hooks/useProfile";
-import { Heart, Instagram, Mail, Github, Linkedin, Twitter, Youtube, Globe, ArrowUp } from "lucide-react";
+import { Instagram, Mail, Github, Linkedin, Twitter, Youtube, Globe, ArrowUp, Code } from "lucide-react";
 
 const socialIcons: Record<string, React.ElementType> = {
   instagram: Instagram,
@@ -104,7 +104,7 @@ export function Footer() {
             className="w-32 h-px bg-gradient-to-r from-transparent via-border to-transparent"
           />
 
-          {/* Made with Love */}
+          {/* Made with Code */}
           <motion.div
             initial={{ opacity: 0 }}
             whileInView={{ opacity: 1 }}
@@ -112,13 +112,8 @@ export function Footer() {
             transition={{ delay: 0.5 }}
             className="flex items-center gap-2 text-sm text-muted-foreground"
           >
-            <span>Made with</span>
-            <motion.div
-              animate={{ scale: [1, 1.2, 1] }}
-              transition={{ duration: 1, repeat: Infinity }}
-            >
-              <Heart className="w-4 h-4 text-primary fill-primary" />
-            </motion.div>
+            <span>Crafted with</span>
+            <Code className="w-4 h-4 text-primary" />
             <span>in Indonesia</span>
           </motion.div>
 
